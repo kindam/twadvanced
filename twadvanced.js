@@ -1,7 +1,9 @@
 (function() {
 
+// adiciona o botão para mostrar/ocutar o menu.
+var menuButton = jQuery( '<td class="icon-box"><div id="twa-menuOpen">twa</div></td>' ).appendTo( '#menu_row2' ),
 // elemento do tempo atual do jogo
-var $serverTime = jQuery( '#serverTime' ),
+$serverTime = jQuery( '#serverTime' ),
 // elemento da data atual do jogo
 $serverDate = jQuery( '#serverDate' ),
 // conteudo da página atual do jogo
@@ -12,8 +14,6 @@ overview = ( document.getElementById( 'overview' ) || { value: 'production' }).v
 $tooltip = jQuery( '<div id="twa-tooltip" style="position:absolute;display:none;z-index:9999;background:#111;color:#ccc;padding:4px;-webkit-border-radius:2px;-moz-border-radius:2px;box-shadow:1px 1px 3px #333"/>' ).appendTo( 'body' ),
 // tabela com as funções utilizadas na visualização de aldeias
 $overviewTools,
-// adiciona o botão para mostrar/ocutar o menu.
-menuButton = jQuery( '<td class="icon-box"><div id="twa-menuOpen">twa</div></td>' ).appendTo( '#menu_row2' ),
 TWA = { version: '1.6.1' };
 
 // LOAD METHODS HERE
@@ -146,7 +146,7 @@ function timeFormat( value ) {
 function validTime( dateTime ) {
 	var valid = false;
 	
-	if ( /^(\d+):(\d+):(\d+) (\d+)\/(\d+)\/(\d{4})$/.test( dateTime ) ) {
+	if ( /^\d+\:\d+\:\d+\s\d+\/\d+\/\d{4}$/.test( dateTime ) ) {
 		var data = dateTime.split( ' ' ),
 			inputDate = data[ 1 ].split( '/' ),
 			currentDate = $serverDate.text().split( '/' );
@@ -209,12 +209,12 @@ var Menu = (function() {
 	Style.add('menu', {
 		'.twa-menu': { display: 'none', 'z-index': '12000', position: 'absolute', top: 130, 'font-family': 'Helvetica', 'font-size': 12, width: 1020, background: '#eee', color: '#333', border: 'solid 1px rgba(0,0,0,0.2)', '-webkit-border-radius': 4, '-moz-border-radius': 4, 'border-radius': 4, 'box-shadow': '3px 3px 5px rgba(0,0,0,0.2)', margin: '0 auto 30px' },
 		'.twa-menu a': { 'font-weight': '700' },
-		'.twa-menu .head': { 'text-align': center, height: 23, 'border-bottom': '1px solid #ddd' },
-		'.twa-menu .head ul': { margin: 7, padding: 0 },
-		'.twa-menu .head li': { 'list-style': 'none', display: 'inline', 'border-right': '1px solid #bbb' },
+		'.twa-menu .head': { 'text-align': center, height: 25, 'border-bottom': '1px solid #ddd' },
+		'.twa-menu .head ul': { 'line-height': 15, padding: 0 },
+		'.twa-menu .head li': { 'list-style': 'none', display: 'inline', 'border-right': '1px solid #bbb', padding: '0 13px' },
 		'.twa-menu .head li:last-child': { border: 'none' },
-		'.twa-menu .head li a': { color: '#666', 'text-decoration': 'none', padding: 8 },
-		'.twa-menu .head li a.active': { 'text-decoration': 'underline' },
+		'.twa-menu .head li a': { color: '#666', 'text-decoration': 'none', padding: 8, 'font-size': 13, 'border-radius': 10 },
+		'.twa-menu .head li a.active': { 'box-shadow': '0 0 5px #AAA inset' },
 		'.twa-menu .body': { padding: 10 }
 	});
 	
@@ -312,10 +312,48 @@ var Menu = (function() {
 	};
 })();
 
+(function() {
+	var codes = {
+		num: function( event ) { return event.keyCode > 47 && event.keyCode < 58; },
+		space: function( event ) { return event.keyCode === 32 },
+		'|': function( event ) { return event.keyCode === 226 && event.shiftKey },
+		':': function( event ) { return event.keyCode === 191 && event.shiftKey },
+		'/': function( event ) { return ( event.keyCode === 193 || event.keyCode === 81 ) && event.altKey && !event.shiftKey }
+	};
+	
+	function parse( props, event ) {
+		var pass = false;
+		props = props.split( ' ' );
+		
+		if ( event.keyCode == 46 || event.keyCode == 8 || event.keyCode == 9 || event.keyCode == 27 || event.keyCode == 13 || (event.keyCode == 65 && event.ctrlKey === true) || (event.keyCode >= 35 && event.keyCode <= 39) || ((event.keyCode === 67 || event.keyCode === 86 || event.keyCode === 88) && event.ctrlKey)) {
+			return true;
+		}
+		
+		for ( var i = 0; i < props.length; i++ ) {
+			if ( codes[ props[ i ] ]( event ) ) {
+				return true;
+			}
+		}
+		
+		return false;
+	}
+	
+	jQuery.fn.acceptOnly = function( props, callback ) {
+		return this.keydown(function( event ) {
+			if ( parse( props, event ) ) {
+				callback.call( this, event );
+				return true;
+			} else {
+				return event.preventDefault();
+			}
+		});
+	};
+})();
+
 // estilos CSS gerais
 Style.add('twa', {
 	'#twa-menuOpen': { margin: '0px 6px 0px 2px', 'border-radius': 4, padding: '0px 3px 2px 3px', 'font-family': 'courier new', border: '1px solid rgba(0,0,0,0.25)', background: '-webkit-gradient(linear,0% 100%, 0% 0%,to(rgb(231,231,231)),from(rgb(196,196,196)))', background1: '-moz-linear-gradient(to bottom,rgb(231,231,231) 0%,rgb(196,196,196) 100%)', cursor: 'pointer' },
-	'.twaInput, .twaInput input': { 'border-radius': 6, 'box-shadow': '0 1px 4px rgba(0,0,0,0.2) inset', 'font-family': 'courier new', border: '1px solid #bbb', color: '#555' },
+	'.twaInput': { background: '#F3F3F3', 'border-radius': 6, 'box-shadow': '0 1px 4px rgba(0,0,0,0.2) inset', 'font-family': 'courier new', border: '1px solid #bbb', color: '#555' },
 	'.checkStyle': { display: 'block', 'float': 'left', background: 'url(http://i.imgur.com/MhppaVe.png) top left no-repeat', 'background-position': '-4px -5px', width: 21, height: 20, 'margin-right': 5 },
 	'.checkStyle.checked': { 'background-position': '-4px -65px' }
 });

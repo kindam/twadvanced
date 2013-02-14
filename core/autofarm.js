@@ -17,6 +17,7 @@ TWA.autofarm = {
 				'.autofarm button': { 'margin-top': 15, 'border-radius': 3, padding: '7px 20px', cursor: 'pointer', background: '-webkit-linear-gradient(bottom, #CCC 0%, white 100%)', background1: '-moz-linear-gradient(bottom, #CCC 0%, white 100%)', border: '1px solid #AAA', 'font-weight': 'bold' },
 				'.autofarm button:active': { 'box-shadow': '1px 1px 2px rgba(0,0,0,.3) inset' },
 				'.autofarm label': { display: 'block', height: 25, 'line-height': 20 },
+				'.autofarm .log': { 'overflow-y': 'scroll', height: 150 },
 				'.autofarm .log td': { padding: 2, 'border-bottom': '1px solid #DADADA' }
 			});
 			
@@ -27,51 +28,49 @@ TWA.autofarm = {
 				units[ 0 ].innerHTML += '<img src="http://cdn.tribalwars.net/graphic/unit/unit_' + name + '.png"/> <input name="' + name + '" class="twaInput"/>';
 			}
 			
-			jQuery( '.autofarm :input[name]' ).each(function() {
-				var type = 'units';
+			jQuery( '.autofarm .units input' ).acceptOnly('num', function() {
+				var elem = this;
 				
-				if ( this.type === 'checkbox' ) {
-					this.checked = TWA.settings._autofarm[ this.name ];
-					this.onchange = function() {
-						TWA.settings._autofarm[ this.name ] = this.checked;
-						TWA.storage( true );
-					};
-				} else {
-					if ( this.type === 'text' ) {
-						this.value = TWA.settings._autofarm.units[ this.name ] || 0;
-					} else {
-						this.value = TWA.settings._autofarm.coords.join( ' ' );
-						type = 'coords';
+				clearTimeout( timeout );
+				timeout = setTimeout(function() {
+					TWA.settings._autofarm.units[ elem.name ] = TWA.autofarm.data[ elem.name ] = Number( elem.value );
+					console.log();
+					TWA.storage( true );
+				}, 500);
+			}).each(function() {
+				if ( Number( TWA.settings._autofarm.units[ this.name ] ) ) {
+					this.value = Number( TWA.settings._autofarm.units[ this.name ] );
+				}
+			});
+			
+			jQuery( '.autofarm [name=coords]' ).acceptOnly('num space |', function() {
+				var elem = this;
+				
+				clearTimeout( timeout );
+				timeout = setTimeout(function() {
+					var coords = elem.value.split( /\s+/ ),
+						correctCoords = [];
+					
+					for ( var i = 0; i < coords.length; i++ ) {
+						if ( /-?\d{1,3}\|-?\d{1,3}/.test( coords[ i ] ) ) {
+							correctCoords.push( coords[ i ] );
+						}
 					}
 					
-					jQuery( this ).onlyNumbers().keydown(function( event ) {
-						var elem = this;
-						this.value = this.value.replace( /\s+/, ' ' ).replace( /[|]+/, '|' );
-						
-						clearTimeout( timeout );
-						
-						timeout = setTimeout(function() {
-							if ( elem.type === 'text' ) {
-								TWA.settings._autofarm.units[ elem.name ] = TWA.autofarm.data[ elem.name ] = Number( elem.value );
-							} else {
-								var coords = elem.value.split( /\s+/ ),
-									correctCoords = [];
-								
-								for ( var i = 0; i < coords.length; i++ ) {
-									if ( /-?\d{1,3}\|-?\d{1,3}/.test( coords[ i ] ) ) {
-										correctCoords.push( coords[ i ] );
-									}
-								}
-								
-								TWA.settings._autofarm.coords = correctCoords;
-								TWA.autofarm.next( true );
-							}
-							
-							TWA.storage( true );
-						}, 500);
-					});
-				}
-			}).filter( '[type=checkbox]' ).checkStyle();
+					TWA.settings._autofarm.coords = correctCoords;
+					TWA.autofarm.next( true );
+					TWA.storage( true );
+				}, 500);
+			});
+			
+			jQuery( '.autofarm input[type=checkbox]' ).each(function() {
+				this.checked = TWA.settings._autofarm[ this.name ];
+				
+				jQuery( this ).change(function() {
+					TWA.settings._autofarm[ this.name ] = this.checked;
+					TWA.storage( true );
+				});
+			}).checkStyle();
 			
 			jQuery( '.autofarm button' ).click(function() {
 				if ( TWA.autofarm.stop ) {
@@ -107,8 +106,7 @@ TWA.autofarm = {
 	},
 	log: function( log, error ) {
 		if ( !TWA.autofarm.$log ) {
-			jQuery( 'div.autofarm' ).append( '<div style="overflow-y:scroll;height:150"><table class="log"></table></div>' );
-			TWA.autofarm.$log = jQuery( '.autofarm .log' );
+			TWA.autofarm.$log = jQuery( '<div class="log"><table></table></div>' ).appendTo( 'div.autofarm' );
 		}
 		
 		TWA.autofarm.$log.prepend( '<tr><td><strong>' + ( $serverTime.text() + ' ' + $serverDate.text() ) + ':</strong> <img src="/graphic/' + ( error ? 'delete_small.png' : 'command/attack.png' ) + '"/> ' + log + '</td></tr>' );
@@ -131,53 +129,61 @@ TWA.autofarm = {
 			}
 		}
 		
-		jQuery.post(TWA.url( 'place&try=confirm' ), TWA.autofarm.data, function( html ) {
-			if ( jQuery( 'img[src="/game.php?captcha"]', html ).length ) {
-				return false;
-			}
-			
-			var error = jQuery( '#error', html ),
-				troops = TWA.autofarm.troops( html );
-			
-			if ( error.text() ) {
-				var time = TWA.autofarm.commands( html ),
-					text = false;
-				
-				// quando há comandos em andamento e sem tropas na aldeia
-				if ( time && !troops ) {
-					!TWA.autofarm.nolog && TWA.autofarm.log( lang.autofarm.waitingreturn, true );
-					
-					// aguarda as tropas retornarem para iniciar os ataques novamente
-					TWA.autofarm.delay(function() {
-						this.attack( false, true );
-					}, time).nolog = true;
-				// quando não há tropas em andamento nem tropas na aldeia
-				} else if ( !time && !troops ) {
-					!TWA.autofarm.nolog && TWA.autofarm.log( lang.autofarm.notroops, true );
-					
-					// tenta iniciar os ataques a cada 10 segundos (caso tropas sejam recrutadas)
-					TWA.autofarm.delay(function() {
-						this.attack( false, true );
-					}, 10000).nolog = true;
-				// se houver tropas na aldeia, apenas envia.
-				} else if ( troops ) {
-					TWA.autofarm.attack( troops, true );
+		jQuery.ajax({
+			url: TWA.url( 'place&try=confirm' ),
+			type: 'post',
+			data: TWA.autofarm.data,
+			success: function( html ) {
+				if ( jQuery( 'img[src="/game.php?captcha"]', html ).length ) {
+					return false;
 				}
 				
-				return;
+				var error = jQuery( '#error', html ),
+					troops = TWA.autofarm.troops( html );
+				
+				if ( error.text() ) {
+					var time = TWA.autofarm.commands( html ),
+						text = false;
+					
+					// quando há comandos em andamento e sem tropas na aldeia
+					if ( time && !troops ) {
+						!TWA.autofarm.nolog && TWA.autofarm.log( lang.autofarm.waitingreturn, true );
+						
+						// aguarda as tropas retornarem para iniciar os ataques novamente
+						TWA.autofarm.delay(function() {
+							this.attack( false, true );
+						}, time).nolog = true;
+					// quando não há tropas em andamento nem tropas na aldeia
+					} else if ( !time && !troops ) {
+						!TWA.autofarm.nolog && TWA.autofarm.log( lang.autofarm.notroops, true );
+						
+						// tenta iniciar os ataques a cada 10 segundos (caso tropas sejam recrutadas)
+						TWA.autofarm.delay(function() {
+							this.attack( false, true );
+						}, 10000).nolog = true;
+					// se houver tropas na aldeia, apenas envia.
+					} else if ( troops ) {
+						TWA.autofarm.attack( troops, true );
+					}
+					
+					return;
+				}
+				
+				// caso a aldeia atacada tenha dono e a opção de proteção esteja ativada, passa para a proxima coordenada.
+				if ( TWA.settings._autofarm.protect && jQuery( 'form a[href*=player]', html ).length ) {
+					return TWA.autofarm.next();
+				}
+				
+				var form = jQuery( 'form', html );
+				
+				jQuery.post(form[ 0 ].action, form.serialize(), function() {
+					TWA.autofarm.log( lang.autofarm.success.springf( TWA.autofarm.coord.join( '|' ) ) ).next();
+					TWA.autofarm.nolog = false;
+				});
+			},
+			error: function() {
+				TWA.autofarm.attack( units, true );
 			}
-			
-			// caso a aldeia atacada tenha dono e a opção de proteção esteja ativada, passa para a proxima coordenada.
-			if ( TWA.settings._autofarm.protect && jQuery( 'form a[href*=player]', html ).length ) {
-				return TWA.autofarm.next();
-			}
-			
-			var form = jQuery( 'form', html );
-			
-			jQuery.post(form[ 0 ].action, form.serialize(), function() {
-				TWA.autofarm.log( lang.autofarm.success.springf( TWA.autofarm.coord.join( '|' ) ) ).next();
-				TWA.autofarm.nolog = false;
-			});
 		});
 		
 		return TWA.autofarm;
