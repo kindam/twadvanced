@@ -10,15 +10,18 @@ TWA.attackplanner = {
 			inputUnits += '<td><img src="http://cdn.tribalwars.net/graphic/unit/unit_' + name + '.png" style="margin-bottom:-4px"/> <input unit="' + name + '" class="units twaInput"/></td>';
 		}
 		
-		Menu.add('attackplanner', lang.attackplanner.attackplanner, ( '<h3>' + lang.attackplanner.addcommand + '</h3><table width="100%"><tr><th colspan="4">' + lang.attackplanner.attacker + '</th><th colspan="4">' + lang.attackplanner.target + '</th><th colspan="4">' + lang.attackplanner.time + '</th><th colspan="4">' + lang.attackplanner.support + '</th></tr><tr><td colspan="4"><input tooltip="xxx|yyy" name="from" class="twaInput"/></td><td colspan="4"><input tooltip="xxx|yyy" name="to" class="twaInput"/></td><td colspan="4"><input name="time" tooltip="hh:mm:ss dd/mm/yyyy" class="twaInput" value="' + TWA.data.attackplanner.lastTime + '"/></td><td><input name="support" type="checkbox"/></td></tr></table><table width="100%" class="vis"><tr><th colspan="12">' + lang.attackplanner.troops + '</th></tr><tr>__inputUnits</tr></table><h3>' + lang.attackplanner.commands + '</h3><table class="vis" width="100%" id="twa-commands"><tr><th>' + lang.attackplanner.attacker + '</th><th>' + lang.attackplanner.target + '</th><th>' + lang.attackplanner.time + '</th><th>' + lang.attackplanner.type + '</th><th>' + lang.attackplanner.troops + '</th><th>' + lang.attackplanner.options + '</th></tr></table><h3>' + lang.attackplanner.commandssended + '</h3><div style="overflow:auto;height:150px"><table id="twa-attackplanner-log" style="width:100%" class="vis"><tr><th>' + lang.attackplanner.attacker + '</th><th>' + lang.attackplanner.target + '</th><th>' + lang.attackplanner.time + '</th><th>' + lang.attackplanner.type + '</th><th>' + lang.attackplanner.options + '</th></tr></table></div>' ).replace( '__inputUnits', inputUnits ), function() {
-			jQuery( '.attackplanner input[type=checkbox]' ).checkStyle();
+		Menu.add('attackplanner', lang.attackplanner.attackplanner, ( '<h3>' + lang.attackplanner.addcommand + '</h3><table><tr><th colspan="4">' + lang.attackplanner.attacker + '</th><th colspan="4">' + lang.attackplanner.target + '</th><th colspan="4">' + lang.attackplanner.time + '</th><th colspan="4">' + lang.attackplanner.support + '</th></tr><tr><td colspan="4"><input tooltip="xxx|yyy" name="from" class="twaInput"/></td><td colspan="4"><input tooltip="xxx|yyy" name="to" class="twaInput"/></td><td colspan="4"><input name="time" tooltip="hh:mm:ss dd/mm/yyyy" class="twaInput" value="' + TWA.data.attackplanner.lastTime + '"/></td><td><input name="support" type="checkbox"/></td></tr></table><table><tr><th colspan="12">' + lang.attackplanner.troops + '</th></tr><tr>__inputUnits</tr></table><h3>' + lang.attackplanner.commands + '</h3><table class="commands"><tr><th>' + lang.attackplanner.attacker + '</th><th>' + lang.attackplanner.target + '</th><th>' + lang.attackplanner.time + '</th><th>' + lang.attackplanner.type + '</th><th>' + lang.attackplanner.troops + '</th><th>' + lang.attackplanner.options + '</th></tr></table><h3>' + lang.attackplanner.commandssended + '</h3><div style="overflow:auto;height:150px"><table class="log"><tr><th>' + lang.attackplanner.attacker + '</th><th>' + lang.attackplanner.target + '</th><th>' + lang.attackplanner.time + '</th><th>' + lang.attackplanner.type + '</th><th>' + lang.attackplanner.options + '</th></tr></table></div>' ).replace( '__inputUnits', inputUnits ), function() {
+			this.find( 'input[type=checkbox]' ).checkStyle();
 			
 			Style.add('attackplanner', {
+				'.attackplanner table': { width: '100%' },
 				'.attackplanner .units': { width: 33 },
 				'.attackplanner th': { 'text-align': 'center', background: '-webkit-linear-gradient(bottom, #BBB 30%, #CCC 100%) !important', background1: '-moz-linear-gradient(bottom, #BBB 30%, #CCC 100%) !important', padding: 7 },
-				'.attackplanner td': { 'text-align': 'center', padding: 7 },
+				'.attackplanner td': { 'text-align': 'center', padding: '7px 0' },
 				'.attackplanner input': { width: 90, height: 20, 'text-align': 'center' },
-				'.attackplanner [name="time"]': { width: 200, border: '1px solid #aaa' }
+				'.attackplanner [name="time"]': { width: 200, border: '1px solid #aaa' },
+				'.attackplanner .cmdUnits': { display: 'inline-block', 'text-align': 'center', margin: '0 3px' },
+				'.attackplanner .cmdUnits img': { margin: '0 -3px -3px 1px', width: 15 }
 			});
 			
 			// ao iniciar o Attack Planner e adiciona os comandos na tabela
@@ -27,7 +30,7 @@ TWA.attackplanner = {
 			var valid = { from: false, to: false, time: validTime( TWA.data.attackplanner.lastTime ) },
 				timeout = false,
 				// a cada botão pressionado verifica se os dados inseridos estão corretos
-				inputs = jQuery( '.attackplanner input' ).keyup(function( event ) {
+				inputs = this.find( 'input' ).keyup(function( event ) {
 					if ( this.name === 'time' ) {
 						if ( /[^\d\:\/\s]/g.test( this.value ) ) {
 							this.value = this.value.replace( /[^\d\:\/\s]/g, '' );
@@ -213,28 +216,27 @@ TWA.attackplanner = {
 			var commands = TWA.data.attackplanner.commands.sort(function( a, b ) {
 				return a.time - b.time;
 			}),
-			commandList = jQuery( '#twa-commands' );
+			commandList = jQuery( '.commands' );
 			// remove todos os comandos da tabela
 			commandList.find( 'tr:not(:first)' ).remove();
 			
-			var date, hour, min, sec,
-				day, month, year, i,
-				unit, tr, _html, data,
-				units = [], elem,
-				inputs, tds,
-				// html usado em cada comando na tabela
-				html = '<tr id="__id"><td class="coord __from"><img src="http://www.preloaders.net/preloaders/252/preview.gif" style="width:25px" class="load"/></td><td class="coord __target"><img src="http://www.preloaders.net/preloaders/252/preview.gif" style="width:25px" class="load"/></td><td>__time</td><td>__type</td><td>__units</td><td><a href="#" class="remove"><img src="/graphic/delete.png"/></a> <a href="#" class="editCommand"><img src="/graphic/edit.png"/></a></td></tr>';
+			// html usado em cada comando na tabela
+			var html = '<tr id="__id"><td class="coord __from"><img src="http://www.preloaders.net/preloaders/252/preview.gif" style="width:25px" class="load"/></td><td class="coord __target"><img src="http://www.preloaders.net/preloaders/252/preview.gif" style="width:25px" class="load"/></td><td>__time</td><td>__type</td><td>__units</td><td><a href="#" class="remove"><img src="/graphic/delete.png"/></a> <a href="#" class="editCommand"><img src="/graphic/edit.png"/></a></td></tr>';
 			
 			// loop em todos os comandos
-			for ( i = 0; i < commands.length; i++ ) {
-				units = [];
+			for ( var i = 0; i < commands.length; i++ ) {
+				if ( 'object' !== typeof commands[ i ] ) {
+					continue;
+				}
 				
-				for ( unit in commands[ i ].units ) {
-					units.push( '[<img src="http://cdn.tribalwars.net/graphic/unit/unit_' + unit + '.png" style="margin:0 -3px -3px 1px;width:15px"/> <span class="' + unit + '">' + commands[ i ].units[ unit ] + '</span>]' );
+				var units = [];
+				
+				for ( var unit in commands[ i ].units ) {
+					units.push( '<span class="cmdUnits"><img src="http://cdn.tribalwars.net/graphic/unit/unit_' + unit + '.png"/><br/><span class="' + unit + '">' + commands[ i ].units[ unit ] + '</span></span>' );
 				}
 				
 				// adicionando os dados ao html
-				_html = html.replace( '__id', i )
+				var _html = html.replace( '__id', i )
 				.replace( '__from', commands[ i ].village )
 				.replace( '__target', commands[ i ].target )
 				.replace( '__time', timeFormat( commands[ i ].time ) )
@@ -242,10 +244,10 @@ TWA.attackplanner = {
 				.replace( '__units', units.join( '' ) );
 				
 				// ao clicar remove comando da lista de espera e remove o elemento da tabela
-				tr = jQuery( _html ).appendTo( commandList );
+				var tr = jQuery( _html ).appendTo( commandList );
 				
 				tr.find( '.remove' ).click(function() {
-					elem = this.parentNode.parentNode;
+					var elem = this.parentNode.parentNode;
 					TWA.data.attackplanner.commands.remove( elem.id );
 					jQuery( elem ).remove();
 					
@@ -259,9 +261,9 @@ TWA.attackplanner = {
 				});
 				
 				tr.find( '.editCommand' ).click(function() {
-					inputs = jQuery( '.attackplanner input' );
-					elem = this.parentNode.parentNode;
-					tds = elem.getElementsByTagName( 'td' );
+					var inputs = jQuery( '.attackplanner input' ),
+						elem = this.parentNode.parentNode,
+						tds = elem.getElementsByTagName( 'td' );
 					
 					inputs[ 0 ].value = tds[ 0 ].className.split( ' ' )[ 1 ];
 					inputs[ 1 ].value = tds[ 1 ].className.split( ' ' )[ 1 ];
@@ -311,7 +313,7 @@ TWA.attackplanner = {
 			});
 		// caso nao tenha comandos, limpa a tabela
 		} else {
-			jQuery( '#twa-commands tr:not(:first)' ).remove();
+			jQuery( '.commands tr:not(:first)' ).remove();
 		}
 		
 		callback && callback();
@@ -385,7 +387,7 @@ TWA.attackplanner = {
 			
 			// faz um loop em todos os comandos que foram enviados e os remove da tabela
 			for ( var i = 0; i < removes.length; i++ ) {
-				jQuery( '#twa-commands tr:eq(' + removes[ i ] + ')' ).remove();
+				jQuery( '.commands tr:eq(' + removes[ i ] + ')' ).remove();
 			}
 			
 			// salva os dados
@@ -407,7 +409,7 @@ TWA.attackplanner = {
 				village = TWA.attackplanner.villages[ command.village ],
 				// nome da aldeia alvo
 				target = TWA.attackplanner.villages[ command.target ],
-				log = document.getElementById( 'twa-attackplanner-log' ),
+				log = jQuery( '.attackplanner .log' ),
 				units = '';
 			
 			// verifica se o comando é um ataque ou apoio e adiciona ao objeto de dados
@@ -425,14 +427,14 @@ TWA.attackplanner = {
 				
 				// caso tenha algum erro, adiciona ao log e para o comando
 				if ( error.text() ) {
-					return log.innerHTML += '<tr><td colspan="5">' + time + ' - ' + error.text() + '</td></tr>';
+					return log.append( '<tr><td colspan="5">' + time + ' - ' + error.text() + '</td></tr>' );
 				}
 				
 				var form = jQuery( 'form', html );
 				
 				// confirma e envia o ataque e adiciona ao log
 				jQuery.post(form[ 0 ].action, form.serialize(), function() {
-					log.innerHTML += '<tr><td><strong>' + time + '</strong></td><td><img src="/graphic/command/' + ( command.support ? 'support' : 'attack' ) + '.png"/></td><td><a href="' + TWA.url( 'info_village&id=' + village.id ) + '">' + village.name + '</a></td><td><a href="' + TWA.url( 'info_village&id=' + target.id ) + '">' + target.name + '</a></td><td>' + units + '</td></tr>';;
+					log.append( '<tr><td><strong>' + time + '</strong></td><td><img src="/graphic/command/' + ( command.support ? 'support' : 'attack' ) + '.png"/></td><td><a href="' + TWA.url( 'info_village&id=' + village.id ) + '">' + village.name + '</a></td><td><a href="' + TWA.url( 'info_village&id=' + target.id ) + '">' + target.name + '</a></td><td>' + units + '</td></tr>' );
 				});
 			});
 		});
