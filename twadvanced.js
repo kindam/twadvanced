@@ -316,6 +316,7 @@ var Menu = (function() {
 	var codes = {
 		num: function( event ) { return event.keyCode > 47 && event.keyCode < 58; },
 		space: function( event ) { return event.keyCode === 32 },
+		enter: function( event ) { return event.keyCode === 13 },
 		'|': function( event ) { return event.keyCode === 226 && event.shiftKey },
 		':': function( event ) { return event.keyCode === 191 && event.shiftKey },
 		'/': function( event ) { return ( event.keyCode === 193 || event.keyCode === 81 ) && event.altKey && !event.shiftKey }
@@ -508,5 +509,7 @@ TWA.ready(function() {
 	TWA.settings.autofarm && !document.getElementById( 'twa-placefarm' ) && TWA.autofarm.init();
 	!document.getElementById( 'di' ) && TWA.config();
 });
+
+return TWA;
 
 })();
