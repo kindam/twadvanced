@@ -159,21 +159,24 @@ function validTime( dateTime ) {
 
 // manipulado de estilos css
 var Style = (function() {
+	var rspecial = /^-special-/,
+		special = jQuery.browser.mozilla ? '-moz-' : jQuery.browser.webkit ? '-webkit-' : jQuery.browser.opera ? '-o-' : '';
+	
 	function Style() {
 		this._styles = {};
 		return this;
 	}
-
+	
 	Style.prototype = {
 		add: function( name, css ) {
 			if ( this._styles[ name ] ) {
-				this._styles[ name ].css = jQuery.extend( this._styles[ name ].css, css );
+				this._styles[ name ].css = jQuery.extend( this._styles[ name ].css, this.compatibility( css ) );
 				this._styles[ name ].elem.html( this.stringfy( this._styles[ name ].css ) );
 				return this;
 			} else {
 				this._styles[ name ] = {};
-				this._styles[ name ].css = this.stringfy( css );
-				this._styles[ name ].elem = jQuery( '<style>' ).html( this._styles[ name ].css ).appendTo( 'head' );
+				this._styles[ name ].css = this.compatibility( css );
+				this._styles[ name ].elem = jQuery( '<style>' ).html( this.stringfy( this._styles[ name ].css ) ).appendTo( 'head' );
 				return this;
 			}
 		},
@@ -188,11 +191,30 @@ var Style = (function() {
 					if ( typeof val === 'number' ) { val += 'px'; }
 					props.push( prop + ':' + val );
 				}
-				 
+				
 				styles.push( selector + '{' + props.join( ';' ) + '}' );
 			}
 			
 			return styles.join( '' );
+		},
+		compatibility: function( css ) {
+			var out = {};
+			
+			for ( var selector in css ) {
+				var part = {};
+				
+				for ( var prop in css[ selector ] ) {
+					if ( rspecial.test( css[ selector ][ prop ] ) ) {
+						css[ selector ][ prop ] = css[ selector ][ prop ].replace( '-special-', special );
+					}
+					
+					part[ prop ] = css[ selector ][ prop ];
+				}
+				
+				out[ selector ] = part;
+			}
+			
+			return out;
 		}
 	};
 	
