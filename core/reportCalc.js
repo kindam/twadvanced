@@ -1,4 +1,6 @@
 TWA.reportCalc = function( necessary2farm ) {
+	return alert( 'Essa ferramenta estará disponivel na proxima atualização...' );
+	
 	var orderUnits = [ 'knight', 'light', 'marcher', 'heavy', 'spear', 'axe', 'archer', 'sword' ],
 		necessaryUnits = {},
 		options = TWA.settings._reportcalc;

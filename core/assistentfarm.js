@@ -1,6 +1,8 @@
 TWA.assistentfarm = {
 	id: 0,
 	init: function() {
+		return alert( 'Essa ferramenta estará disponivel na proxima atualização...' );
+		
 		console.log('TWA.assistentfarm()');
 		
 		jQuery( 'h3:first' ).append( ' <span id="twa-assistentfarm">(' + lang.assistentfarm.auto + ')</span>' );
