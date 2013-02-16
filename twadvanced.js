@@ -457,7 +457,7 @@ var languages = {};
 var lang = !languages[ TWA.settings.lang ] ? languages.pt : languages[ TWA.settings.lang ];
 
 if ( newversion ) {
-	UI.addConfirmBox( 'Relaxeaza Tribal Wars Advanced - Version ' + TWA.version + '. <p><b>News:</b> <a href="http://code.google.com/p/tribalwars-scripts/wiki/Relaxeaza_Tribal_Wars_Advanced#Histórico_de_atualizações">HERE</a></p>', function() {} );
+	UI.addConfirmBox( 'Relaxeaza Tribal Wars Advanced - Version ' + TWA.version + '. <p><b>Changes/News:</b> <a href="https://github.com/relaxeaza/twadvanced/wiki/Tribal-Wars-Advanced">HERE</a></p>', function() {} );
 }
 
 TWA.ready(function() {
@@ -509,7 +509,5 @@ TWA.ready(function() {
 	TWA.settings.autofarm && !document.getElementById( 'twa-placefarm' ) && TWA.autofarm.init();
 	!document.getElementById( 'di' ) && TWA.config();
 });
-
-return TWA;
 
 })();
