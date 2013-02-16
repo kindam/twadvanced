@@ -38,7 +38,7 @@ TWA.attackplanner = {
 			// ao iniciar o Attack Planner e adiciona os comandos na tabela
 			TWA.attackplanner.update();
 			
-			this.find( '[name=from], [name=to]' ).acceptOnly('num |', function( event ) {
+			this.find( '[name=from], [name=to]' ).acceptOnly('num | enter', function( event ) {
 				jQuery( this )[ valid[ this.name ] = /^\d{1,3}\|\d{1,3}$/.test( this.value ) ? 'removeClass' : 'addClass' ]( 'error' );
 			
 			// pega as tropas atuais da aldeia e adiciona nas entradas
@@ -66,7 +66,7 @@ TWA.attackplanner = {
 				}, 500);
 			});
 			
-			this.find( '[name=time]' ).acceptOnly('space num : /', function( event ) {
+			this.find( '[name=time]' ).acceptOnly('space num : / enter', function( event ) {
 				jQuery( this )[ valid.time = validTime( this.value ) ? 'removeClass' : 'addClass' ]( 'error' );
 			}).keydown(function( event ) {
 				if ( event.keyCode === 38 || event.keyCode === 40 ) {
@@ -134,7 +134,7 @@ TWA.attackplanner = {
 				}
 			});
 			
-			this.find( '.units' ).acceptOnly('num', function() {
+			this.find( '.units' ).acceptOnly('num enter', function() {
 				jQuery( this )[ valid[ this.name ] = /^\d*$/.test( this.value ) ? 'removeClass' : 'addClass' ]( 'error' );
 			});
 			
