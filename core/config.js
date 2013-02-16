@@ -36,13 +36,11 @@ TWA.config = function() {
 		'.config textarea': { border: '1px solid #999', width: 280, height: 80, 'font-size': 12 },
 		'.config select': { border: '1px solid #999', width: 70, margin: '0 2px', 'font-size': 12 },
 		'.config input': {border: '1px solid #999', margin: 3 },
-		'.config button': { 'border-radius': 3, margin: 10, padding: '7px 20px', background: '-webkit-linear-gradient(bottom, #CCC 0%, white 100%)', background1: '-moz-linear-gradient(bottom, #CCC 0%, white 100%)', border: '1px solid #AAA', 'font-weight': 'bold' },
 		'.config h1': { background: '#e4e4e4', 'border-bottom': '1px solid #c4c4c4', 'border-top': '1px solid #fff', color: '#333', 'font-size': 13, 'font-weight': 'bold', 'line-height': 20, margin: '6px 0 10px', padding: '3px 7px' },
-		'.config label': { margin: '3px 0', display: 'block', height: 20, 'line-height': 21 },
-		'#twa-tooltip': { display: 'none', position: 'absolute', 'width': 300, padding: '4px 4px 3px', background: '#000', opacity: '0.8', color: '#fff', 'font-size': 12, border: '1px solid #000', '-moz-border-radius': 2, '-webkit-border-radius': 2, 'border-radius': 2 } 
+		'.config label': { margin: '3px 0', display: 'block', height: 20, 'line-height': 21 }
 	});
 	
-	Menu.add('config', '</div>' + lang.config.config, html + '<div><h1>Languages</h1><label>Language: ' + langs + '</select></label></div><div class="bottom"><button>' + lang.config.save + '</button></div>', function() {
+	Menu.add('config', '</div>' + lang.config.config, html + '<div><h1>Languages</h1><label>Language: ' + langs + '</select></label></div><div class="bottom"><button class="twaButton">' + lang.config.save + '</button></div>', function() {
 		this.find( 'input[type=checkbox]' ).checkStyle();
 	});
 	

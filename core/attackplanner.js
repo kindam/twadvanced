@@ -26,7 +26,7 @@ TWA.attackplanner = {
 			Style.add('attackplanner', {
 				'.attackplanner table': { width: '100%' },
 				'.attackplanner .units': { width: 33 },
-				'.attackplanner th': { 'text-align': 'center', background: '-webkit-linear-gradient(bottom, #BBB 30%, #CCC 100%) !important', background1: '-moz-linear-gradient(bottom, #BBB 30%, #CCC 100%) !important', padding: 7 },
+				'.attackplanner th': { 'text-align': 'center', background: '-special-linear-gradient(bottom, #BBB 30%, #CCC 100%) !important', padding: 7 },
 				'.attackplanner td': { 'text-align': 'center', padding: '7px 0' },
 				'.attackplanner input': { width: 90, height: 20, 'text-align': 'center' },
 				'.attackplanner [name="time"]': { width: 200, border: '1px solid #aaa' },
@@ -38,37 +38,47 @@ TWA.attackplanner = {
 			// ao iniciar o Attack Planner e adiciona os comandos na tabela
 			TWA.attackplanner.update();
 			
-			this.find( '[name=from], [name=to]' ).acceptOnly('num | enter', function( event ) {
-				jQuery( this )[ valid[ this.name ] = /^\d{1,3}\|\d{1,3}$/.test( this.value ) ? 'removeClass' : 'addClass' ]( 'error' );
+			var valid = { from: false, to: false, time: validTime( TWA.data.attackplanner.lastTime ) },
+				timeout;
 			
-			// pega as tropas atuais da aldeia e adiciona nas entradas
-			// das unidades que serão usadas no ataque/apoio
-			}).eq( 0 ).keydown(function() {
-				if ( !valid.from ) {
-					return true;
-				}
+			this.find( '[name=from], [name=to]' ).acceptOnly('num | enter', function( event ) {
+				event.keyCode === 13 && valid.from && valid.to && valid.time && TWA.attackplanner.add();
 				
-				var coords = this.value;
-				clearTimeout( timeout );
+				jQuery( this )[ valid[ this.name ] = /^\d{1,3}\|\d{1,3}$/.test( this.value ) ? 'removeClass' : 'addClass' ]( 'error' );
 				
-				timeout = setTimeout(function() {
-					// envia requisição ajax para pegar as informações da aldeia
-					TWA.attackplanner.villageInfo(coords, function( data, coords ) {
-						jQuery.get(TWA.url( 'place', data.id ), function( html ) {
-							// loop em todos as inputs de unidades na praça de reunião e
-							// adiciona aos inputs do a Attack Planner.
-							jQuery( '.unitsInput', html ).each(function( i ) {
-								var unit = Number( this.nextElementSibling.innerHTML.match( /\d+/ )[ 0 ] );
-								inputs[ i + 4 ].value = unit > 0 ? unit : '';
+				// pega as tropas atuais da aldeia e adiciona nas entradas
+				// das unidades que serão usadas no ataque/apoio
+				if ( this.name === 'from' ) {
+					if ( !valid.from ) {
+						return true;
+					}
+					
+					var coords = this.value;
+					clearTimeout( timeout );
+					
+					timeout = setTimeout(function() {
+						// envia requisição ajax para pegar as informações da aldeia
+						TWA.attackplanner.villageInfo(coords, function( data, coords ) {
+							jQuery.get(TWA.url( 'place', data.id ), function( html ) {
+								var units = jQuery( '.attackplanner .units' );
+								
+								// loop em todos as inputs de unidades na praça de reunião e
+								// adiciona aos inputs do a Attack Planner.
+								jQuery( '.unitsInput', html ).each(function( i ) {
+									var unit = Number( this.nextElementSibling.innerHTML.match( /\d+/ )[ 0 ] );
+									units[ i ].value = unit > 0 ? unit : '';
+								});
 							});
 						});
-					});
-				}, 500);
+					}, 500);
+				}
 			});
 			
 			this.find( '[name=time]' ).acceptOnly('space num : / enter', function( event ) {
+				event.keyCode === 13 && valid.from && valid.to && valid.time && TWA.attackplanner.add();
+				
 				jQuery( this )[ valid.time = validTime( this.value ) ? 'removeClass' : 'addClass' ]( 'error' );
-			}).keydown(function( event ) {
+				
 				if ( event.keyCode === 38 || event.keyCode === 40 ) {
 					if ( /^\d+\:\d+\:\d+\s\d+\/\d+\/\d{4}$/.test( this.value ) ) {
 						var fix = this.value.split( ' ' ),
@@ -134,20 +144,15 @@ TWA.attackplanner = {
 				}
 			});
 			
-			this.find( '.units' ).acceptOnly('num enter', function() {
+			this.find( '.units' ).acceptOnly('num enter', function( event ) {
+				event.keyCode === 13 && valid.from && valid.to && valid.time && TWA.attackplanner.add();
+				
 				jQuery( this )[ valid[ this.name ] = /^\d*$/.test( this.value ) ? 'removeClass' : 'addClass' ]( 'error' );
 			});
 			
-			var inputs = this.find( 'input' ).keydown(function( event ) {
-				event.keyCode === 13 && valid.from && valid.to && valid.time && TWA.attackplanner.add();
-			});
-			
-			var valid = { from: false, to: false, time: validTime( TWA.data.attackplanner.lastTime ) },
-				timeout;
-			
 			// caso a entrada com o tempo e data esteja invalida, arruma a borda do input
 			if ( !valid.time ) {
-				inputs.eq( 2 ).addClass( 'error' );
+				jQuery( '.attackplanner [name=time]' ).addClass( 'error' );
 			}
 		});
 		

@@ -14,7 +14,7 @@ TWA.villageFilter = function() {
 	
 	var villages = jQuery( villagesExpr ).get();
 	
-	jQuery( '#twa-overviewtools' ).show().append( '<tr><td>' + lang.villagefilter.search + ' <input type="text" id="twa-villagefilter" style="padding:1px 2px;border:1px solid silver;border-radius:2px;-webkit-border-radius:2px;-moz-border-radius:2px;height:15px"/></td></tr>' );
+	jQuery( '#twa-overviewtools' ).show().append( '<tr><td>' + lang.villagefilter.search + ' <input type="text" id="twa-villagefilter" style="padding:1px 2px;border:1px solid silver;border-radius:2px;height:15px"/></td></tr>' );
 	
 	jQuery( '#twa-villagefilter' ).keyup(function () {
 		var param = this.value.toLowerCase();

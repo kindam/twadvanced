@@ -1,6 +1,6 @@
 TWA.renamevillages = {
 	init: function() {
-		$overviewTools.show().append( '<tr><td>Renomear aldeias: <input type="text" id="twa-renamevillages" style="padding:1px 2px;border:1px solid red;border-radius:2px;-webkit-border-radius:2px;-moz-border-radius:2px;height:15px"/> <a href="http://code.google.com/p/tribalwars-scripts/wiki/Renomeador_de_Aldeias" target="_blank">(Máscaras)</a> <label><input type="checkbox" id="twa-onlyselected"/> Apenas aldeias selecionadas.</label></td></tr>');
+		$overviewTools.show().append( '<tr><td>Renomear aldeias: <input type="text" id="twa-renamevillages" style="padding:1px 2px;border:1px solid red;border-radius:2px;border-radius:2px;height:15px"/> <a href="http://code.google.com/p/tribalwars-scripts/wiki/Renomeador_de_Aldeias" target="_blank">(Máscaras)</a> <label><input type="checkbox" id="twa-onlyselected"/> Apenas aldeias selecionadas.</label></td></tr>');
 		
 		// ao digitar verifica se é possivel renomear, caso seja, altera a
 		// cor da borda no input, caso precine "Enter" é renomeado as aldeias

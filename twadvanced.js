@@ -11,7 +11,7 @@ $contentValue = jQuery( '#content_value' ),
 // pega o "modo" que esta na página de visualização de aldeias
 overview = ( document.getElementById( 'overview' ) || { value: 'production' }).value,
 // elemento do tooltip usado no script
-$tooltip = jQuery( '<div id="twa-tooltip" style="position:absolute;display:none;z-index:9999;background:#111;color:#ccc;padding:4px;-webkit-border-radius:2px;-moz-border-radius:2px;box-shadow:1px 1px 3px #333"/>' ).appendTo( 'body' ),
+$tooltip = jQuery( '<div id="twa-tooltip"/>' ).appendTo( 'body' ),
 // tabela com as funções utilizadas na visualização de aldeias
 $overviewTools,
 TWA = { version: '1.6.1' };
@@ -201,17 +201,17 @@ var Style = (function() {
 			var out = {};
 			
 			for ( var selector in css ) {
-				var part = {};
+				var props = {};
 				
 				for ( var prop in css[ selector ] ) {
 					if ( rspecial.test( css[ selector ][ prop ] ) ) {
 						css[ selector ][ prop ] = css[ selector ][ prop ].replace( '-special-', special );
 					}
 					
-					part[ prop ] = css[ selector ][ prop ];
+					props[ prop ] = css[ selector ][ prop ];
 				}
 				
-				out[ selector ] = part;
+				out[ selector ] = props;
 			}
 			
 			return out;
@@ -221,24 +221,32 @@ var Style = (function() {
 	return new Style();
 })();
 
+// estilos CSS gerais
+Style.add('twa', {
+	'#twa-menuOpen': { margin: '0px 6px 0px 2px', 'border-radius': 4, padding: '0px 3px 2px 3px', 'font-family': 'courier new', border: '1px solid rgba(0,0,0,0.25)', background: '-special-linear-gradient(bottom, #e7e7e7 100%, #c5c5c5 0%)', cursor: 'pointer' },
+	'#twa-tooltip': { position: 'absolute', display: 'none', 'z-index': '999999', background: 'rgba(0,0,0,.8)', width: 300, color: '#ccc', padding: 4, 'border-radius': 2, 'box-shadow': '1px 1px 3px #333' },
+	'.twaInput': { background: '#F3F3F3', 'border-radius': 6, 'box-shadow': '0 1px 4px rgba(0,0,0,0.2) inset', 'font-family': 'courier new', border: '1px solid #bbb', color: '#555' },
+	'.twaButton': { 'border-radius': 3, margin: 10, padding: '7px 20px', background: '-special-linear-gradient(bottom, #CCC 0%, white 100%)', border: '1px solid #AAA', 'font-weight': 'bold' },
+	'.checkStyle': { display: 'block', 'float': 'left', background: 'url(http://i.imgur.com/MhppaVe.png) top left no-repeat', 'background-position': '-4px -5px', width: 21, height: 20, 'margin-right': 5 },
+	'.checkStyle.checked': { 'background-position': '-4px -65px' },
+	// menu
+	'.twa-menu': { display: 'none', 'z-index': '12000', position: 'absolute', top: 130, 'font-family': 'Helvetica', 'font-size': 12, width: 1020, background: '#eee', color: '#333', border: 'solid 1px rgba(0,0,0,0.2)', 'border-radius': 4, 'box-shadow': '3px 3px 5px rgba(0,0,0,0.2)', margin: '0 auto 30px' },
+	'.twa-menu a': { 'font-weight': '700' },
+	'.twa-menu .head': { 'text-align': 'center', height: 25, 'border-bottom': '1px solid #ddd' },
+	'.twa-menu .head ul': { 'line-height': 15, padding: 0 },
+	'.twa-menu .head li': { 'list-style': 'none', display: 'inline', 'border-right': '1px solid #bbb', padding: '0 13px' },
+	'.twa-menu .head li:last-child': { border: 'none' },
+	'.twa-menu .head li a': { color: '#666', 'text-decoration': 'none', padding: 8, 'font-size': 13, 'border-radius': 10 },
+	'.twa-menu .head li a.active': { 'box-shadow': '0 0 5px #AAA inset' },
+	'.twa-menu .body': { padding: 10 }
+});
+
 // menu com ferramentas/configurações
 var Menu = (function() {
 	function center( elem ) {
 		var $win = jQuery( window );
 		return elem.css( 'left', Math.max( 0, ( ( $win.width() - elem.outerWidth() ) / 2 ) + $win.scrollLeft() ) );
 	}
-	
-	Style.add('menu', {
-		'.twa-menu': { display: 'none', 'z-index': '12000', position: 'absolute', top: 130, 'font-family': 'Helvetica', 'font-size': 12, width: 1020, background: '#eee', color: '#333', border: 'solid 1px rgba(0,0,0,0.2)', '-webkit-border-radius': 4, '-moz-border-radius': 4, 'border-radius': 4, 'box-shadow': '3px 3px 5px rgba(0,0,0,0.2)', margin: '0 auto 30px' },
-		'.twa-menu a': { 'font-weight': '700' },
-		'.twa-menu .head': { 'text-align': center, height: 25, 'border-bottom': '1px solid #ddd' },
-		'.twa-menu .head ul': { 'line-height': 15, padding: 0 },
-		'.twa-menu .head li': { 'list-style': 'none', display: 'inline', 'border-right': '1px solid #bbb', padding: '0 13px' },
-		'.twa-menu .head li:last-child': { border: 'none' },
-		'.twa-menu .head li a': { color: '#666', 'text-decoration': 'none', padding: 8, 'font-size': 13, 'border-radius': 10 },
-		'.twa-menu .head li a.active': { 'box-shadow': '0 0 5px #AAA inset' },
-		'.twa-menu .body': { padding: 10 }
-	});
 	
 	var Menu = function( pos ) {
 		this.opened = false;
@@ -306,6 +314,7 @@ var Menu = (function() {
 	return new Menu();
 })();
 
+// jQuery( checkbox ).checkStyle()
 // adiciona estilos nos checkbox.
 (function() {
 	jQuery.fn.checkStyle = function() {
@@ -334,6 +343,7 @@ var Menu = (function() {
 	};
 })();
 
+// jQuery( elem ).acceptOnly()
 (function() {
 	var codes = {
 		num: function( event ) { return event.keyCode > 47 && event.keyCode < 58; },
@@ -372,14 +382,6 @@ var Menu = (function() {
 		});
 	};
 })();
-
-// estilos CSS gerais
-Style.add('twa', {
-	'#twa-menuOpen': { margin: '0px 6px 0px 2px', 'border-radius': 4, padding: '0px 3px 2px 3px', 'font-family': 'courier new', border: '1px solid rgba(0,0,0,0.25)', background: '-webkit-gradient(linear,0% 100%, 0% 0%,to(rgb(231,231,231)),from(rgb(196,196,196)))', background1: '-moz-linear-gradient(to bottom,rgb(231,231,231) 0%,rgb(196,196,196) 100%)', cursor: 'pointer' },
-	'.twaInput': { background: '#F3F3F3', 'border-radius': 6, 'box-shadow': '0 1px 4px rgba(0,0,0,0.2) inset', 'font-family': 'courier new', border: '1px solid #bbb', color: '#555' },
-	'.checkStyle': { display: 'block', 'float': 'left', background: 'url(http://i.imgur.com/MhppaVe.png) top left no-repeat', 'background-position': '-4px -5px', width: 21, height: 20, 'margin-right': 5 },
-	'.checkStyle.checked': { 'background-position': '-4px -65px' }
-});
 
 menuButton.click(function() {
 	if ( !Menu.opened ) {
