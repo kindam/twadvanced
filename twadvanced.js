@@ -1,5 +1,9 @@
 (function() {
 
+if ( typeof TWA !== 'undefined' ) {
+	return TWA;
+}
+
 // adiciona o botão para mostrar/ocutar o menu.
 var menuButton = jQuery( '<td class="icon-box"><div id="twa-menuOpen">twa</div></td>' ).appendTo( '#menu_row2' ),
 // elemento do tempo atual do jogo
@@ -227,7 +231,7 @@ Style.add('twa', {
 	'#twa-tooltip': { position: 'absolute', display: 'none', 'z-index': '999999', background: 'rgba(0,0,0,.8)', width: 300, color: '#ccc', padding: 4, 'border-radius': 2, 'box-shadow': '1px 1px 3px #333' },
 	'.twaInput': { background: '#F3F3F3', 'border-radius': 6, 'box-shadow': '0 1px 4px rgba(0,0,0,0.2) inset', 'font-family': 'courier new', border: '1px solid #bbb', color: '#555' },
 	'.twaButton': { 'border-radius': 3, margin: 10, padding: '7px 20px', background: '-special-linear-gradient(bottom, #CCC 0%, white 100%)', border: '1px solid #AAA', 'font-weight': 'bold' },
-	'.checkStyle': { display: 'block', 'float': 'left', background: 'url(http://i.imgur.com/MhppaVe.png) top left no-repeat', 'background-position': '-4px -5px', width: 21, height: 20, 'margin-right': 5 },
+	'.checkStyle': { display: 'block', 'float': 'left', background: 'url(http://i.imgur.com/MhppaVe.png) top left no-repeat', 'background-position': '-4px -5px', width: 21, height: 20 },
 	'.checkStyle.checked': { 'background-position': '-4px -65px' },
 	// menu
 	'.twa-menu': { display: 'none', 'z-index': '12000', position: 'absolute', top: 130, 'font-family': 'Helvetica', 'font-size': 12, width: 1020, background: '#eee', color: '#333', border: 'solid 1px rgba(0,0,0,0.2)', 'border-radius': 4, 'box-shadow': '3px 3px 5px rgba(0,0,0,0.2)', margin: '0 auto 30px' },
@@ -316,32 +320,30 @@ var Menu = (function() {
 
 // jQuery( checkbox ).checkStyle()
 // adiciona estilos nos checkbox.
-(function() {
-	jQuery.fn.checkStyle = function() {
-		this.hide().each(function() {
-			var checked,
-			input = jQuery( this ),
-			elem = jQuery( '<a class="checkStyle"></a>' ).click(function() {
-				elem = jQuery( this );
-				var checked = elem.hasClass( 'checked' );
-				elem[ elem.hasClass( 'checked' ) ? 'removeClass' : 'addClass' ]( 'checked' );
-				input.attr( 'checked', !checked );
-				
-				return false;
-			}).insertAfter( this );
+jQuery.fn.checkStyle = function() {
+	this.hide().each(function() {
+		var checked,
+		input = jQuery( this ),
+		elem = jQuery( '<a class="checkStyle"></a>' ).click(function() {
+			elem = jQuery( this );
+			var checked = elem.hasClass( 'checked' );
+			elem[ elem.hasClass( 'checked' ) ? 'removeClass' : 'addClass' ]( 'checked' );
+			input.attr( 'checked', !checked );
 			
-			if ( input.is( ':checked' ) ) {
-				elem.addClass( 'checked' );
-			}
-			
-			if ( this.parentElement.nodeName.toLowerCase() === 'label' ) {
-				jQuery( this ).click(function() {
-					elem.trigger( 'click' );
-				});
-			}
-		});
-	};
-})();
+			return false;
+		}).insertAfter( this );
+		
+		if ( input.is( ':checked' ) ) {
+			elem.addClass( 'checked' );
+		}
+		
+		if ( this.parentElement.nodeName.toLowerCase() === 'label' ) {
+			jQuery( this ).click(function() {
+				elem.trigger( 'click' );
+			});
+		}
+	});
+};
 
 // jQuery( elem ).acceptOnly()
 (function() {
@@ -382,6 +384,38 @@ var Menu = (function() {
 		});
 	};
 })();
+
+function addCheckbox() {
+	var stop = [ 'trader', 'groups', 'commands', 'incomings' ],
+		table, tr;
+	
+	if ( stop.indexOf( overview ) >= 0 ) {
+		return;
+	} else if ( overview == 'units' ) {
+		table = document.getElementById( 'units_table' );
+		
+		var tbody = table.getElementsByTagName( 'tbody' ),
+			th = table.getElementsByTagName( 'th' )[ 0 ],
+			tbodyTr;
+		
+		th.innerHTML = '<input type="checkbox" style="margin:0px" id="twa-selectAll"/> ' + th.innerHTML;
+		
+		for ( var i = 0; i < tbody.length; i++ ) {
+			tbodyTr = tbody[ i ].getElementsByTagName( 'tr' )[ 0 ];
+			tbodyTr.getElementsByTagName( 'td' )[ 0 ].innerHTML = '<input type="checkbox" name="village_ids[]" class="addcheckbox" style="margin:0px" value="' + jQuery( 'a[href*="village="]:first', tbody[ i ] )[ 0 ].href.match( /village=(\d+)/ )[ 1 ] + '"/>' + tbodyTr.getElementsByTagName( 'td' )[ 0 ].innerHTML;
+		}
+	} else {
+		tr = jQuery( '.overview_table' )[ 0 ].getElementsByTagName( 'tr' );
+		
+		for ( var i = 0; i < tr.length; i++ ) {
+			tr[ i ].innerHTML = ( !i ? '<th><input type="checkbox" id="twa-selectAll"/></th>' : '<td><input type="checkbox" name="village_ids[]" class="addcheckbox" value="' + jQuery( 'a[href*="village="]:first', tr[ i ] )[ 0 ].href.match( /village=(\d+)/ )[ 1 ] + '"/></td>' ) + tr[ i ].innerHTML;
+		}
+	}
+	
+	jQuery( '#twa-selectAll' ).click(function() {
+		jQuery( '.addcheckbox:visible' ).attr( 'checked', this.checked );
+	});
+}
 
 menuButton.click(function() {
 	if ( !Menu.opened ) {
@@ -487,51 +521,51 @@ if ( newversion ) {
 TWA.ready(function() {
 	switch( game_data.screen ) {
 		case 'map':
-			( TWA.settings._mapplayers || TWA.settings._mapabandoneds ) && !document.getElementById( 'twa-getcoords' ) && TWA.mapCoords.init();
-			TWA.settings.mapmanual && !document.getElementById( 'twa-mapmanual' ) && TWA.mapManual();
+			( TWA.settings._mapplayers || TWA.settings._mapabandoneds ) && TWA.mapCoords.init();
+			TWA.settings.mapmanual && TWA.mapManual();
 			TWA.settings.lastattack && game_data.player.premium && TWA.lastAttack();
 		break;
 		case 'info_player':
-			TWA.settings.profilecoords && !document.getElementById( 'twa-profilecoords' ) && TWA.profileCoords();
-			TWA.settings.profilestats && !document.getElementById( 'twa-graphic' ) && TWA.profileGraphic();
+			TWA.settings.profilecoords && TWA.profileCoords();
+			TWA.settings.profilestats && TWA.profileGraphic();
 		break;
 		case 'info_ally':
-			TWA.settings.profilestats && !document.getElementById( 'twa-graphic' ) && TWA.profileGraphic();
+			TWA.settings.profilestats && TWA.profileGraphic();
 		break;
 		case 'info_member':
-			TWA.settings.allygraphic && game_data.screen === 'info_member' && !document.getElementById( 'twa-tooltipgraphic' ) && TWA.tooltipGraphic();
+			TWA.settings.allygraphic && game_data.screen === 'info_member' && TWA.tooltipGraphic();
 		break;
 		case 'ranking':
-			TWA.settings.mapgenerator && !document.getElementById( 'twa-mapgenerator' ) && game_data.mode !== 'awards' && game_data.mode !== 'wars' && game_data.mode !== 'secrets' && TWA.mapGenerator();
-			TWA.settings.rankinggraphic && !document.getElementsByClassName( 'twa-tooltipgraphic' ).length && TWA.tooltipGraphic();
+			TWA.settings.mapgenerator && game_data.mode !== 'awards' && game_data.mode !== 'wars' && game_data.mode !== 'secrets' && TWA.mapGenerator();
+			TWA.settings.rankinggraphic && TWA.tooltipGraphic();
 		break;
 		case 'overview_villages':
 			$overviewTools = jQuery( '<table class="vis" id="twa-overviewtools" style="display:none" width="100%"><tr><th>Tribal Wars Advanced</th></tr></table>' ).insertBefore( '.overview_table' );
 			
-			TWA.settings.overview && !document.getElementById( 'twa-overview' ) && !game_data.player.premium && TWA.overview.init();
-			TWA.settings.renamevillages && !document.getElementById( 'twa-villagerename' ) && TWA.renamevillages.init();
-			TWA.settings.commandrename && overview === 'commands' && !document.getElementById( 'twa-commandrename' ) && TWA.rename.commands();
-			TWA.settings.villagefilter && overview !== 'trader' && !document.getElementById( 'twa-villagefilter' ) && TWA.villageFilter();
-			overview !== 'trader' && overview !== 'groups' && overview !== 'commands' && !document.getElementsByClassName( 'twa-addcheckbox' ).length && TWA.addCheckbox();
-			TWA.settings.troopcounter && overview === 'units' && !document.getElementById( 'twa-troopcounter' ) && TWA.troopCounter();
-			TWA.settings.changegroups && game_data.player.premium && overview !== 'groups' && overview !== 'trader' && !document.getElementById( 'twa-changegroups' ) && TWA.changegroups.init();
-			TWA.settings.building && overview === 'buildings' && !document.getElementById( 'twa-building' ) && TWA.building.init();
-			TWA.settings.research && overview === 'tech' && !document.getElementById( 'twa-research' ) && TWA.research.init();
+			addCheckbox();
+			TWA.settings.overview && !game_data.player.premium && TWA.overview.init();
+			TWA.settings.renamevillages && TWA.renamevillages.init();
+			TWA.settings.commandrename && overview === 'commands' && TWA.rename.commands();
+			TWA.settings.villagefilter && overview !== 'trader' && TWA.villageFilter();
+			TWA.settings.troopcounter && overview === 'units' && TWA.troopCounter();
+			TWA.settings.changegroups && game_data.player.premium && overview !== 'groups' && overview !== 'trader' && TWA.changegroups.init();
+			TWA.settings.building && overview === 'buildings' && TWA.building.init();
+			TWA.settings.research && overview === 'tech' && TWA.research.init();
 			TWA.settings.selectvillages && game_data.player.premium && TWA.selectVillages.init();
 		break;
 		case 'report':
-			TWA.settings.reportcalc && /view\=\d+/.test( location.href ) && document.getElementById( 'attack_spy' ) && TWA.reportCalc();
-			TWA.settings.reportfilter && !document.getElementById( 'twa-reportfinder' ) && TWA.reportFilter();
-			TWA.settings.reportrename && game_data.player.premium && !document.getElementById( 'twa-reportrename' ) && TWA.rename.reports();
+			TWA.settings.reportcalc && /view\=\d+/.test( location.href ) && TWA.reportCalc();
+			TWA.settings.reportfilter && TWA.reportFilter();
+			TWA.settings.reportrename && game_data.player.premium && TWA.rename.reports();
 		break;
 		case 'am_farm':
-			TWA.settings.assistentfarm && game_data.player.farm_manager && !document.getElementsByClassName( 'error' ).length && !document.getElementById( 'twa-assistentfarm' ) && TWA.assistentfarm.init();
+			TWA.settings.assistentfarm && game_data.player.farm_manager && !document.getElementsByClassName( 'error' ).length && TWA.assistentfarm.init();
 		break;
 	}
 	
-	TWA.settings.attackplanner && !document.getElementById( 'twa-attackplaner' ) && TWA.attackplanner.init();
-	TWA.settings.autofarm && !document.getElementById( 'twa-placefarm' ) && TWA.autofarm.init();
-	!document.getElementById( 'di' ) && TWA.config();
+	TWA.settings.attackplanner && TWA.attackplanner.init();
+	TWA.settings.autofarm && TWA.autofarm.init();
+	TWA.config();
 });
 
 })();
