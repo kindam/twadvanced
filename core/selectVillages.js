@@ -136,13 +136,19 @@ TWA.selectVillages = {
 				case 'att':
 					for ( ; i < TWA.selectVillages.tools.unitsatt.length; i++ ) {
 						unit = TWA.selectVillages.tools.unitsatt[ i ];
-						pop += units[ unit ] * TWA.data.units[ unit ].pop;
+						
+						if ( TWA.data.units[ unit ] ) {
+							pop += units[ unit ] * TWA.data.units[ unit ].pop;
+						}
 					}
 				break;
 				case 'def':
 					for ( ; i < TWA.selectVillages.tools.unitsdef.length; i++ ) {
 						unit = TWA.selectVillages.tools.unitsdef[ i ];
-						pop += units[ unit ] * TWA.data.units[ unit ].pop;
+						
+						if ( TWA.data.units[ unit ] ) {
+							pop += units[ unit ] * TWA.data.units[ unit ].pop;
+						}
 					}
 				break;
 				case 'all':
