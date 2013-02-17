@@ -17,8 +17,8 @@ overview = ( document.getElementById( 'overview' ) || { value: 'production' }).v
 // elemento do tooltip usado no script
 $tooltip = jQuery( '<div id="twa-tooltip"/>' ).appendTo( 'body' ),
 // tabela com as funções utilizadas na visualização de aldeias
-$overviewTools,
-TWA = { version: '1.6.1' };
+$overviewTools;
+window.TWA = { version: '1.6.1' };
 
 // LOAD METHODS HERE
 
@@ -233,6 +233,10 @@ Style.add('twa', {
 	'.twaButton': { 'border-radius': 3, margin: 10, padding: '7px 20px', background: '-special-linear-gradient(bottom, #CCC 0%, white 100%)', border: '1px solid #AAA', 'font-weight': 'bold' },
 	'.checkStyle': { display: 'block', 'float': 'left', background: 'url(http://i.imgur.com/MhppaVe.png) top left no-repeat', 'background-position': '-4px -5px', width: 21, height: 20 },
 	'.checkStyle.checked': { 'background-position': '-4px -65px' },
+	// table
+	'.twa-table': { width: '100%' },
+	'.twa-table th': { 'text-align': 'center', background: '-special-linear-gradient(bottom, #BBB 30%, #CCC 100%) !important', padding: '7px !important' },
+	'.twa-table td': { 'text-align': 'center', padding: '7px 0' },
 	// menu
 	'.twa-menu': { display: 'none', 'z-index': '12000', position: 'absolute', top: 130, 'font-family': 'Helvetica', 'font-size': 12, width: 1020, background: '#eee', color: '#333', border: 'solid 1px rgba(0,0,0,0.2)', 'border-radius': 4, 'box-shadow': '3px 3px 5px rgba(0,0,0,0.2)', margin: '0 auto 30px' },
 	'.twa-menu a': { 'font-weight': '700' },
@@ -481,7 +485,7 @@ if((function() {
 		troopcounter: true,
 		mapgenerator: true,
 		reportcalc: true,
-		_reportcalc: { actives: [ 'knight', 'light', 'marcher', 'spear' ], spy: 1, currentVillage: false },
+		_reportcalc: { actives: [ 'knight', 'light', 'marcher', 'spear' ], spy: 5, ram: 5, currentVillage: false },
 		assistentfarm: true,
 		autofarm: true,
 		_autofarm: { protect: true, index: 0, units: {}, coords: [], random: true },
@@ -566,6 +570,7 @@ TWA.ready(function() {
 	TWA.settings.attackplanner && TWA.attackplanner.init();
 	TWA.settings.autofarm && TWA.autofarm.init();
 	TWA.config();
+	TWA.lastConquests.init();
 });
 
 })();
