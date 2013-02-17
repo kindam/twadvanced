@@ -6,7 +6,7 @@ TWA.autofarm = {
 	init: function() {
 		console.log( 'TWA.autofarm()' );
 		
-		Menu.add('autofarm', lang.autofarm.autofarm, '<h2>' + lang.autofarm.autofarm + '</h2><table><tr><th>Unidades</th></tr><tr><td class="units"></td></tr><tr><th>' + lang.autofarm.coords + '</th></tr><tr><td><textarea name="coords" class="twaInput">' + TWA.settings._autofarm.coords.join(' ') + '</textarea></td></tr><tr><th>Opções</th></tr><tr><td><label><input type="checkbox" name="protect"/> ' + lang.autofarm.protect + '</label><label><input type="checkbox" name="random"/> ' + lang.autofarm.random + '</label><button class="twaButton">' + lang.autofarm.start + '</button></td></tr></table>', function() {
+		Menu.add('autofarm', lang.autofarm.autofarm, '<h2>' + lang.autofarm.autofarm + '</h2><table><tr><th>Unidades</th></tr><tr><td class="units"></td></tr><tr><th>' + lang.autofarm.coords + '</th></tr><tr><td><textarea name="coords" class="twaInput">' + TWA.settings._autofarm.coords.join(' ') + '</textarea></td></tr><tr><th>Opções</th></tr><tr><td><label><input type="checkbox" name="protect"/><span>' + lang.autofarm.protect + '</span></label><label><input type="checkbox" name="random"/><span>' + lang.autofarm.random + '</span></label><button class="twaButton">' + lang.autofarm.start + '</button></td></tr></table>', function() {
 			Style.add('autofarm', {
 				'.autofarm .units input': { width: 40, height: 20, 'text-align': 'center', 'margin-bottom': -4 },
 				'.autofarm img': { margin: '0 3px -4px 10px' },
@@ -15,6 +15,7 @@ TWA.autofarm = {
 				'.autofarm table th': { background: '-special-linear-gradient(right, #EEE 30%, #DDD 100%) !important', 'border-radius': '5px 0px 0px 5px', padding: 10, 'font-size': 13 },
 				'.autofarm table td': { background: 'none', padding: 10 },
 				'.autofarm label': { display: 'block', height: 25, 'line-height': 20 },
+				'.autofarm label span': { 'margin-left': 5 },
 				'.autofarm .log': { 'overflow-y': 'scroll', height: 150 },
 				'.autofarm .log td': { padding: 2, 'border-bottom': '1px solid #DADADA' }
 			});

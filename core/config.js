@@ -37,7 +37,8 @@ TWA.config = function() {
 		'.config select': { border: '1px solid #999', width: 70, margin: '0 2px', 'font-size': 12 },
 		'.config input': {border: '1px solid #999', margin: 3 },
 		'.config h1': { background: '#e4e4e4', 'border-bottom': '1px solid #c4c4c4', 'border-top': '1px solid #fff', color: '#333', 'font-size': 13, 'font-weight': 'bold', 'line-height': 20, margin: '6px 0 10px', padding: '3px 7px' },
-		'.config label': { margin: '3px 0', display: 'block', height: 20, 'line-height': 21 }
+		'.config label': { margin: '3px 0', display: 'block', height: 20, 'line-height': 21 },
+		'.config label span': { 'margin-left': 5 }
 	});
 	
 	Menu.add('config', '</div>' + lang.config.config, html + '<div><h1>Languages</h1><label>Language: ' + langs + '</select></label></div><div class="bottom"><button class="twaButton">' + lang.config.save + '</button></div>', function() {
