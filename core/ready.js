@@ -30,8 +30,9 @@ TWA.ready = function( callback ) {
 		// loop em todas unidades ativadas do jogo
 		jQuery( 'config > *', units[ 0 ] ).each(function() {
 			if ( this.nodeName !== 'militia' ) {
+				console.log();
 				TWA.data.units[ this.nodeName ] = {
-					speed: Math.round( Number( jQuery( 'speed', this ).text() ) ) * 60,
+					speed: Math.round( Number( jQuery( 'speed', this ).text() ) * 24000 ),
 					carry: Number( jQuery( 'carry', this ).text() ),
 					pop: Number( jQuery( 'pop', this ).text() )
 				};
