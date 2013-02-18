@@ -33,7 +33,7 @@ TWA.overview = {
 	},
 	modes: {
 		production: function() {
-			var table = buildFragment( '<table id="production_table" class="vis overview_table" width="100%"><thead><tr><th width="400px">Aldeia</th><th style="width:50px;text-align:center">Madeira</th><th style="width:50px;text-align:center">Argila</th><th style="width:50px;text-align:center">Ferro</th><th style="width:46px;text-align:center"><span class="icon header ressources"></span></th><th style="width:53px;text-align:center"><img src="http://cdn2.tribalwars.net/graphic/overview/trader.png"/></th><th>Contruções</th><th>Pesquisas</th><th>Recrutamento</th></tr></thead></table>' ),
+			var table = buildFragment( '<table id="production_table" class="vis overview_table" width="100%"><thead><tr><th width="400px">' + lang.overview.village + '</th><th style="width:50px;text-align:center">' + lang.overview.wood + '</th><th style="width:50px;text-align:center">' + lang.overview.stone + '</th><th style="width:50px;text-align:center">' + lang.overview.stone + '</th><th style="width:46px;text-align:center"><span class="icon header ressources"></span></th><th style="width:53px;text-align:center"><img src="http://cdn2.tribalwars.net/graphic/overview/trader.png"/></th><th>' + lang.overview.buildings + '</th><th>' + lang.overview.research + '</th><th>' + lang.overview.recruit + '</th></tr></thead></table>' ),
 				elems = jQuery( '.overview_table tr[class]' ).get(),
 				vid,
 				village,
@@ -67,7 +67,7 @@ TWA.overview = {
 				span.style.display = 'block';
 				span.style[ 'float' ] = 'left'
 				
-				table.innerHTML += '<tr class="twa-overview-' + vid + '"><td style="line-height:10px;white-space:nowrap">' + village.innerHTML + '<span style="text-align:right;font-size:9px;display:block;float:right;margin-left:30px">' + elems[ i ].getElementsByTagName( 'td' )[ 1 ].innerHTML + ' pontos (' + farm + ')</span></td>' + resourceHtml + '<td style="text-align:center">' + storage + '</td><td class="market" style="text-align:center"></td><td class="builds" style="text-align:center"></td><td class="research" style="text-align:center"></td><td class="recruit" style="text-align:center"></td></tr>';
+				table.innerHTML += '<tr class="twa-overview-' + vid + '"><td style="line-height:10px;white-space:nowrap">' + village.innerHTML + '<span style="text-align:right;font-size:9px;display:block;float:right;margin-left:30px">' + elems[ i ].getElementsByTagName( 'td' )[ 1 ].innerHTML + ' ' + lang.overview.points + ' (' + farm + ')</span></td>' + resourceHtml + '<td style="text-align:center">' + storage + '</td><td class="market" style="text-align:center"></td><td class="builds" style="text-align:center"></td><td class="research" style="text-align:center"></td><td class="recruit" style="text-align:center"></td></tr>';
 				
 				// pega os dados do mercado para adicionar na tabela
 				jQuery.get(TWA.url( 'market', vid ), function( html ) {
@@ -124,7 +124,7 @@ TWA.overview = {
 			jQuery( '.overview_table' ).replaceWith( table );
 		},
 		combined: function() {
-			var table = buildFragment( '<table id="combined_table" class="vis overview_table" width="100%"><thead>' + createStringList( '<style>.overview_table th{text-align:center}</style><tr><th width="400px" style="text-align:left">Aldeia</th><th><img src="http://cdn2.tribalwars.net/graphic/overview/main.png"/></th><th><img src="http://cdn2.tribalwars.net/graphic/overview/barracks.png"/></th><th><img src="http://cdn2.tribalwars.net/graphic/overview/stable.png"/></th><th><img src="http://cdn2.tribalwars.net/graphic/overview/garage.png"/></th><th><img src="http://cdn2.tribalwars.net/graphic/overview/smith.png"/></th><th><img src="http://cdn2.tribalwars.net/graphic/overview/farm.png"/></th>', TWA.data.units, '<th><img src="http://cdn2.tribalwars.net/graphic/unit/unit_{0}.png"/></th>', true ) + '<th><img src="http://cdn2.tribalwars.net/graphic/overview/trader.png"/></th></tr></thead></table>' ),
+			var table = buildFragment( '<table id="combined_table" class="vis overview_table" width="100%"><thead>' + createStringList( '<style>.overview_table th{text-align:center}</style><tr><th width="400px" style="text-align:left">' + lang.overview.village + '</th><th><img src="http://cdn2.tribalwars.net/graphic/overview/main.png"/></th><th><img src="http://cdn2.tribalwars.net/graphic/overview/barracks.png"/></th><th><img src="http://cdn2.tribalwars.net/graphic/overview/stable.png"/></th><th><img src="http://cdn2.tribalwars.net/graphic/overview/garage.png"/></th><th><img src="http://cdn2.tribalwars.net/graphic/overview/smith.png"/></th><th><img src="http://cdn2.tribalwars.net/graphic/overview/farm.png"/></th>', TWA.data.units, '<th><img src="http://cdn2.tribalwars.net/graphic/unit/unit_{0}.png"/></th>', true ) + '<th><img src="http://cdn2.tribalwars.net/graphic/overview/trader.png"/></th></tr></thead></table>' ),
 				elems = jQuery( '.overview_table tr[class]' ).get(),
 				tds,
 				vid,
@@ -167,7 +167,7 @@ TWA.overview = {
 				vid = village.getElementsByTagName( 'a' )[ 0 ].href.match( /village=(\d+)/ )[ 1 ];
 				
 				// novo HTML da aldeia na tabela
-				table.innerHTML += '<tr class="' + elems[ i ].className + ' twa-overview-' + vid + '">' + createStringList( '<td style="line-height:10px;white-space:nowrap">' + village.innerHTML + '<span style="text-align:right;font-size:9px;display:block;float:right;margin-left:30px">' + elems[ i ].getElementsByTagName( 'td' )[ 1 ].innerHTML + ' pontos</span></td><td class="main"></td><td class="barracks"></td><td class="stable"></td><td class="garage"></td><td class="smith"></td><td><a href="' + TWA.url( 'farm', vid ) + '">' + elems[ i ].getElementsByTagName( 'td' )[ 4 ].innerHTML + '</a></td>', TWA.data.units, '<td class="unit-item {0}"></td>', true ) + '<td class="market"></td></tr>';
+				table.innerHTML += '<tr class="' + elems[ i ].className + ' twa-overview-' + vid + '">' + createStringList( '<td style="line-height:10px;white-space:nowrap">' + village.innerHTML + '<span style="text-align:right;font-size:9px;display:block;float:right;margin-left:30px">' + elems[ i ].getElementsByTagName( 'td' )[ 1 ].innerHTML + ' ' + lang.overview.points + '</span></td><td class="main"></td><td class="barracks"></td><td class="stable"></td><td class="garage"></td><td class="smith"></td><td><a href="' + TWA.url( 'farm', vid ) + '">' + elems[ i ].getElementsByTagName( 'td' )[ 4 ].innerHTML + '</a></td>', TWA.data.units, '<td class="unit-item {0}"></td>', true ) + '<td class="market"></td></tr>';
 				
 				// todos os elementos TD da aldeia na tabela
 				tds = table.getElementsByTagName( 'tr' )[ elems.length ].getElementsByTagName( 'td' );

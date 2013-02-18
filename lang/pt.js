@@ -101,7 +101,9 @@ languages.pt = {
 		unitscalc: 'Unidades calculadas:',
 		attack: 'Atacar com essas tropas',
 		error: 'Ocorreu o seguinte erro ao enviar o ataque:',
-		success: 'Ataque enviado com sucesso!'
+		success: 'Ataque enviado com sucesso!',
+		sendSpy: 'Enviar exploradores',
+		sendRam: 'Enviar arietes'
 	},
 	selectvillages: {
 		selectvillages: 'Selecionar aldeias:',
@@ -129,11 +131,14 @@ languages.pt = {
 		protect: 'Proteção - Não enviar ataques caso a aldeia tenha dono.',
 		random: 'Tempo Aleatório - Os ataques são enviados em um tempo entre 0-10 segundos. (Para dificultar a detecção do Auto Farm)',
 		start: 'Iniciar ataques',
-		pause: 'Pausar ataques',
+		stop: 'Parar ataques',
+		continueAtt: 'Continuar ataques',
 		log: 'Log de ataques:',
 		waitingreturn: 'Não há tropas na aldeia no momento. Aguardando tropas retornarem!',
 		notroops: 'Não existem tropas na aldeia.',
-		success: 'Ataque enviado na aldeia {0}.'
+		success: 'Ataque enviado na aldeia {0}.',
+		units: 'Unidades',
+		options: 'Opções'
 	},
 	building: {
 		buildtitle: 'Construção em Massa - Edifícios',
@@ -175,13 +180,42 @@ languages.pt = {
 		errorequal: 'As coordenadas da aldeia atacante não pode ser a mesma da aldeia de destino!',
 		errorunits: 'Você não inseriu nenhuma unidade!',
 		errorcoords: 'A coordenada {0} não existe.',
-		success: '<td>{1}</td><td>{2}</td> com as seguintes tropas: {3}'
+		success: '<td>{1}</td><td>{2}</td> com as seguintes tropas: {3}',
+		current: 'Atual',
+		now: 'Agora'
 	},
 	overview: {
 		warning: '* A visualização avançada é melhor visualizada com a largura da janela acima de 1000px. (Configurações -> Configurações)',
 		combined: 'Combinado',
 		production: 'Produção',
 		changemode: 'Alterar modo de visualização',
-		needreload: 'Necessita atualizar página'
+		needreload: 'Necessita atualizar página',
+		village: 'Aldeia',
+		wood: 'Madeira',
+		stone: 'Argila',
+		iron: 'Ferro',
+		buildings: 'Contruções',
+		research: 'Pesquisas',
+		recruit: 'Recrutamento',
+		points: 'pontos'
+	},
+	lastConquests: {
+		lastConquests: 'Últimas Conquistas',
+		loadLast: 'Carregar conquistas nas últimas',
+		hours: 'horas',
+		village: 'Aldeia',
+		date: 'Data',
+		newOwn: 'Novo dono',
+		oldOwn: 'Antigo dono',
+		pageUp: '<<< para cima',
+		pageDown: 'para baixo >>>',
+		abandoned: 'Aldeia abandonada'
+	},
+	renamevillages: {
+		renamevillages: 'Renomear aldeias',
+		mask: 'Máscaras',
+		onlySelected: 'Apenas aldeias selecionadas',
+		argumentError: 'Argumento inválido',
+		correct: 'Correto'
 	}
 }

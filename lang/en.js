@@ -101,7 +101,9 @@ languages.en = {
 		unitscalc: 'Units calculated:',
 		attack: 'Attack with these troops ',
 		error: 'An error occurred on send attack:',
-		success: 'Attack successfully sent!'
+		success: 'Attack successfully sent!',
+		sendSpy: 'Send spys',
+		sendRam: 'Send rams'
 	},
 	selectvillages: {
 		selectvillages: 'Select villages:',
@@ -129,7 +131,10 @@ languages.en = {
 		protect: 'Protection - Don\'t send attack if village has an owner.',
 		random: 'Random Time - Attacks are sent at a time between 0-10 seconds. (To complicate the detection of Auto Farm)',
 		start: 'Start attacks',
-		pause: 'Pause attacks',
+		stop: 'Stop attacks',
+		continueAtt: 'Continue attacks',
+		units: 'Units',
+		options: 'Options',
 		log: 'Attacks log',
 		waitingreturn: 'There is no troops on the village right now. Waiting for troops come back!',
 		notroops: 'There is no troops on the village.',
@@ -159,7 +164,7 @@ languages.en = {
 		move: 'Move'
 	},
 	attackplanner: {
-		planner: 'Plannet',
+		planner: 'Planner',
 		attackplanner: 'Attack planner',
 		addcommand: 'Add comand',
 		attacker: 'Attacker village',
@@ -175,13 +180,42 @@ languages.en = {
 		errorequal: 'The coordinates of the village attacker can not be the same fate of the village!',
 		errorunits: 'You aren\'t entered any unit!',
 		errorcoords: 'Coords {0} doesn\'t exist.',
-		success: '{0} send on village {1} to village {2} with the troops: {3}'
+		success: '{0} send on village {1} to village {2} with the troops: {3}',
+		current: 'Current',
+		now: 'Now'
 	},
 	overview: {
 		warning: '* The advanced visualization is best viewed with the window width above 1000px. (Settings -> Settings)',
 		combined: 'Combined',
 		production: 'Production',
 		changemode: 'Change overview mode',
-		needreload: 'You need to refresh page'
+		needreload: 'You need to refresh page',
+		village: 'Village',
+		wood: 'Wood',
+		stone: 'Stone',
+		iron: 'Iron',
+		buildings: 'Buildings',
+		research: 'Researchs',
+		recruit: 'Recruitment',
+		points: 'points'
+	},
+	lastConquests: {
+		lastConquests: 'Last ennoblements',
+		loadLast: 'Load ennoblement in the last',
+		hours: 'hours',
+		village: 'Village',
+		date: 'Date',
+		newOwn: 'New Owner',
+		oldOwn: 'Old Owner',
+		pageUp: '<<< page up',
+		pageDown: 'page down >>>',
+		abandoned: 'Abandoned village'
+	},
+	renamevillages: {
+		renamevillages: 'Rename villages',
+		mask: 'Masks',
+		onlySelected: 'Only selected villages',
+		argumentError: 'Invalid argument',
+		correct: 'Correct'
 	}
 }

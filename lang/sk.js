@@ -101,7 +101,9 @@ languages.sk = {
 		unitscalc: 'Vojsko vypoèíta:',
 		attack: 'Útoèi s týmito vojakmi',
 		error: 'Chyba!',
-		success: 'Útok úspešne odoslaný!'
+		success: 'Útok úspešne odoslaný!',
+		sendSpy: 'Odoslať prieskumníci',
+		sendRam: 'Odoslať barany'
 	},
 	selectvillages: {
 		selectvillages: 'Vybra dediny:',
@@ -128,8 +130,11 @@ languages.sk = {
 		coords: 'Súradnice:',
 		protect: 'Ochrana - Nebudú posielané útoky ak má dedina majite¾a.',
 		random: 'Random Time - Útoky sú odosielané v čase medzi 0-10 sekúnd. (To komplikuje detekciu Auto Farm)',
-		start: 'Štart',
-		pause: 'Pozastavi útoky',
+		start: 'Štart útoky',
+		stop: 'Zastavenie útokov',
+		continueAtt: 'Pokračovať útoky',
+		units: 'Jednotky',
+		options: 'Možnosti',
 		log: 'Logy:',
 		waitingreturn: 'Nie sú žiadne jednotky v dedine.Èaká sa na vracajúcich sa vojakov!',
 		notroops: 'V dedine nie sú žiadne jednotky.',
@@ -175,13 +180,42 @@ languages.sk = {
 		errorequal: 'Súradnice dediny útoènika nemožu by rovnaké ako súradnice dediny cie¾a!',
 		errorunits: 'Nezadali ste žiadnu jednotku!',
 		errorcoords: 'Cie¾ {0} neexistuje!',
-		success: '{0} Poslané z dedine {1} do dediny {2} s nasledujucími vojakmi {3}'
+		success: '{0} Poslané z dedine {1} do dediny {2} s nasledujucími vojakmi {3}',
+		current: 'Prúd',
+		now: 'Teraz'
 	},
 	overview: {
 		warning: '* Pokroèilá vizualizácia je optimalizovaná pre šírku okna nad 1000px. (Nastavenia -> Nastavenia)',
 		combined: 'Kombinovaný',
 		production: 'Produkcia',
 		changemode: 'Zmena režimu zobrazenia',
-		needreload: 'Potrebujete aktualizova stránku'
+		needreload: 'Potrebujete aktualizova stránku',
+		village: 'Obec',
+		wood: 'Drevo',
+		stone: 'Íl',
+		iron: 'žehlička',
+		buildings: 'Stavby',
+		research: 'Vyhľadávanie',
+		recruit: 'Nábor',
+		points: 'body'
+	},
+	lastConquests: {
+		lastConquests: 'Najnovšie úspechy',
+		loadLast: 'Vložte úspechy v posledných',
+		hours: 'hodiny',
+		village: 'Obec',
+		date: 'Dátum',
+		newOwn: 'Nový vlastník',
+		oldOwn: 'Bývalý majiteľ',
+		pageUp: '<<< hore',
+		pageDown: 'dole >>>',
+		abandoned: 'Opustené dediny'
+	},
+	renamevillages: {
+		renamevillages: 'Premenovanie dedín',
+		mask: 'Masky',
+		onlySelected: 'Len vybrané obce',
+		argumentError: 'Neplatný argument',
+		correct: 'Opraviť'
 	}
 }

@@ -27,7 +27,7 @@
 				'.lastConquests .time': { 'text-align': 'center', padding: '3px 10px', width: 13 },
 			});
 			
-			Menu.add('lastConquests', 'Últimas Conquistas', '<p>Carregar conquistas nas últimas <input type="text" class="time twaInput" value="1"/> horas. (max 24h)</p><table style="height:675px"><thead><tr><th>Aldeia</th><th style="width:150px">Data</th><th>Novo dono</th><th>Antigo dono</th></tr></thead><tbody></tbody></table><table><tr><td><a href="#" id="twaPageUp" style="display:none"><<< para cima</a></td><td><a href="#" id="twaPageDown">para baixo >>></a></td></tr></table>', function() {
+			Menu.add('lastConquests', lang.lastConquests.lastConquests, '<p>' + lang.lastConquests.loadLast + ' <input type="text" class="time twaInput" value="1"/> ' + lang.lastConquests.hours + '. (max 24h)</p><table style="height:675px"><thead><tr><th>' + lang.lastConquests.village + '</th><th style="width:150px">' + lang.lastConquests.date + '</th><th>' + lang.lastConquests.newOwn + '</th><th>' + lang.lastConquests.oldOwn + '</th></tr></thead><tbody></tbody></table><table><tr><td><a href="#" id="twaPageUp" style="display:none">' + lang.lastConquests.pageUp + '</a></td><td><a href="#" id="twaPageDown">' + lang.lastConquests.pageUp + '</a></td></tr></table>', function() {
 				var table = this.find( 'tbody:first' ).empty();
 					$time = this.find( '.time' ).acceptOnly( 'num enter', keydownHandler ),
 					pageUp = jQuery( '#twaPageUp' ),
@@ -64,7 +64,7 @@
 		},
 		load: function( type, id ) {
 			if ( id == 0 ) {
-				return jQuery( '.' + type + id ).parent().text( 'Aldeia abandonada' );
+				return jQuery( '.' + type + id ).parent().text( lang.lastConquests.abandoned );
 			}
 			
 			if ( !waitList[ type + id ] ) {
