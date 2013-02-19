@@ -1,6 +1,4 @@
 TWA.villageFilter = function() {
-	console.log('TWA.villageFilter()');
-	
 	var villagesExpr = '.overview_table tr:not(:first)';
 	var nameExpr = 'span[id^=label_text]';
 	var timeout;

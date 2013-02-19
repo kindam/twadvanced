@@ -1,6 +1,4 @@
 TWA.profileGraphic = function() {
-	console.log( 'TWA.profileGraphic()' );
-	
 	// pega o id do jogador/tribo
 	var id = location.search.match( /id=(\d+)/ )[ 1 ],
 		// verifica se o perfil é de jogador ou tribo

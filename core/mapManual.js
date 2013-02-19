@@ -1,6 +1,4 @@
 TWA.mapManual = function() {
-	console.log('TWA.mapManual()');
-	
 	// opções e caixa de coordenadas
 	jQuery( '#map_whole' ).after( '<br/><table class="vis" width="100%" id="twa-mapmanual"><tr><th>' + lang.mapmanual.getcoords + '</th></tr><tr><td style="text-align:center"><textarea style="width:100%;background:none;border:none;resize:none;font-size:11px"></textarea></td></tr></table>' );
 	

@@ -1,7 +1,5 @@
 TWA.selectVillages = {
 	init: function() {
-		console.log('TWA.selectVillages()');
-		
 		// todos os modos
 		var modes = TWA.selectVillages.modes;
 			ready = false;

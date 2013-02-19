@@ -1,6 +1,4 @@
 TWA.profileCoords = function() {
-	console.log( 'TWA.profileCoords()' );
-	
 	var // lista de aldeias
 		tr = document.getElementById( 'villages_list' ).getElementsByTagName( 'tr' ),
 		coords = [],

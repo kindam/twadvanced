@@ -26,7 +26,7 @@
 				'.lastConquests table': { width: '100%' },
 				'.lastConquests th': { 'text-align': 'center', background: '-special-linear-gradient(bottom, #BBB 30%, #CCC 100%) !important', padding: 7 },
 				'.lastConquests td': { 'text-align': 'center', padding: '7px 0', height: 15, 'border-bottom': '1px solid rgba(0,0,0,.05)' },
-				'.lastConquests .time': { 'text-align': 'center', padding: '3px 10px', width: 13 },
+				'.lastConquests .time': { 'text-align': 'center', padding: '3px 10px', width: 13 }
 			});
 			
 			Menu.add('lastConquests', lang.lastConquests.lastConquests, '<p>' + lang.lastConquests.loadLast + ' <input type="text" class="time twaInput" value="1"/> ' + lang.lastConquests.hours + '. (max 24h)</p><table><thead><tr><th>' + lang.lastConquests.village + '</th><th style="width:150px">' + lang.lastConquests.date + '</th><th>' + lang.lastConquests.newOwn + '</th><th>' + lang.lastConquests.oldOwn + '</th></tr></thead><tbody></tbody></table><table><tr><td><a href="#" id="twaPageUp" style="display:none">' + lang.lastConquests.pageUp + '</a></td><td><a href="#" id="twaPageDown">' + lang.lastConquests.pageDown + '</a></td></tr></table>', function() {

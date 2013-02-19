@@ -4,8 +4,6 @@ TWA.autofarm = {
 	nolog: false,
 	stop: true,
 	init: function() {
-		console.log( 'TWA.autofarm()' );
-		
 		Menu.add('autofarm', lang.autofarm.autofarm, '<h2>' + lang.autofarm.autofarm + '</h2><table><tr><th>' + lang.autofarm.units + '</th></tr><tr><td class="units"></td></tr><tr><th>' + lang.autofarm.coords + '</th></tr><tr><td><textarea name="coords" class="twaInput">' + TWA.settings._autofarm.coords.join(' ') + '</textarea></td></tr><tr><th>' + lang.autofarm.options + '</th></tr><tr><td><label><input type="checkbox" name="protect"/><span>' + lang.autofarm.protect + '</span></label><label><input type="checkbox" name="random"/><span>' + lang.autofarm.random + '</span></label><button class="twaButton">' + lang.autofarm.start + '</button></td></tr></table>', function() {
 			Style.add('autofarm', {
 				'.autofarm .units input': { width: 40, height: 20, 'text-align': 'center', 'margin-bottom': -4 },

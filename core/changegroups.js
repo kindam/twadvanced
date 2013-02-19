@@ -1,7 +1,5 @@
 TWA.changegroups = {
 	init: function() {
-		console.log('TWA.changegroups()');
-		
 		jQuery( '#twa-overviewtools' ).show().append( '<tr id="twa-changegroups"><td>' + lang.changegroups.changegroups + ' <select id="twa-group" name="selected_group"></select> <input type="submit" value="' + lang.changegroups.add + '" name="add_to_group"/> <input type="submit" value="' + lang.changegroups.remove + '" name="remove_from_group"/> <input type="submit" value="' + lang.changegroups.move + '" name="change_group"/> <img src="http://www.preloaders.net/preloaders/252/preview.gif" style="width:25px;display:none" id="twa-loader"/></td></tr>' );
 		
 		jQuery( '#twa-changegroups input' ).click(function() {

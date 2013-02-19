@@ -1,6 +1,4 @@
 TWA.lastAttack = function() {
-	console.log( 'TWA.lastAttack()' );
-	
 	// caso as opções para mostrar popup ao passar o mouse nas
 	//aldeias esteja desativada a ferramenta não pode prosseguir
 	if ( !document.getElementById( 'show_popup' ).checked || !document.getElementById( 'map_popup_attack' ).checked ) {

@@ -3,8 +3,6 @@ TWA.assistentfarm = {
 	init: function() {
 		return alert( 'Essa ferramenta estará disponivel na proxima atualização...' );
 		
-		console.log('TWA.assistentfarm()');
-		
 		jQuery( 'h3:first' ).append( ' <span id="twa-assistentfarm">(' + lang.assistentfarm.auto + ')</span>' );
 		jQuery( '#farm_units' ).parent().after( '<div class="vis" style="overflow:auto;height:100px"><table style="width:100%"><tr id="twa-assistent-log"><th><h4>' + lang.assistentfarm.log + '</h4></th></tr></table></div>' );
 		TWA.assistentfarm.prepare();

@@ -1,7 +1,5 @@
 TWA.research = {
 	init: function() {
-		console.log('TWA.research()');
-		
 		jQuery( '.overview_table' ).before( '<table class="vis" width="100%" id="twa-research"><tr><th>' + lang.research.help + ' <a href="#" id="twa-research-cancel">» ' + lang.research.cancel + '</a></th></tr></table>' );
 		
 		jQuery( '#twa-research-cancel' ).click(function() {

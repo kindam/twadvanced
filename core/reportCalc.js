@@ -15,8 +15,6 @@ TWA.reportCalc = function() {
 			'#twa-results td': { border: '1px solid #ddd', 'border-radius': 5, background: '#fff', height: 20 }
 		});
 		
-		console.log( 'TWA.reportCalc()' );
-		
 		var inputs = '',
 			unitsAttack = '',
 			colspan = 0;

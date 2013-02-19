@@ -1,6 +1,4 @@
 TWA.mapGenerator = function() {
-	console.log( 'TWA.mapGenerator()' );
-	
 	var type = /ally/.test( game_data.mode ) ? 't' : 'p',
 		colors = '00ff00 999999 823c0a b40000 f40000 0000f4 880088 f0c800 00a0f4 ff8800 ffff00 e0d3b8 04b45f 04b4ae 81f7f3 be81f7 fa58f4 ff0088 ffffff f7be81'.split( ' ' ),
 		zoom = 120,

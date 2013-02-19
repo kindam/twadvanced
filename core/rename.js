@@ -1,7 +1,5 @@
 TWA.rename = {
 	init: function( expr, type, id ) {
-		console.log( 'TWA.rename()' );
-		
 		var elem = jQuery( expr );
 		
 		if ( expr !== '.overview_table' ) {

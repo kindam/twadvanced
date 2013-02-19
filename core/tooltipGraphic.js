@@ -1,6 +1,4 @@
 TWA.tooltipGraphic = function() {
-	console.log('TWA.tooltipGraphic()');
-	
 	jQuery( '<input type="hidden" id="twa-tooltipgraphic" />' ).appendTo( 'body' );
 	
 	jQuery( '#content_value a[href*=info_player], #content_value a[href*=info_ally]' ).each(function() {

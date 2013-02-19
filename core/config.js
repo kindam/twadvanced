@@ -1,6 +1,4 @@
 TWA.config = function() {
-	console.log( 'TWA.config()' );
-	
 	// html da lista de linguagens disponiveis no script
 	var langs = '<select style="width:120px" name="lang">';
 	

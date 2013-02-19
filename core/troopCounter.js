@@ -1,13 +1,11 @@
 TWA.troopCounter = function() {
-	console.log( 'TWA.troopCounter()' );
-	
 	jQuery( '#units_table' ).after( '<table id="twa-troopcounter" class="vis" style="width:100%;margin:0 auto"><thead>' + jQuery( '#units_table thead' ).html() + '</thead><tbody>' + jQuery( '#units_table tbody:first' ).html() + '</tbody></table>' );
 	
-	var units = {};
-	var table = document.getElementById( 'twa-troopcounter' );
-	var img = document.getElementById( 'units_table' ).getElementsByTagName( 'tr' )[ 0 ].getElementsByTagName( 'img' );
-	var tbody = document.getElementById( 'units_table' ).getElementsByTagName( 'tbody' );
-	var mytr = table.getElementsByTagName( 'tbody' )[ 0 ].getElementsByTagName( 'tr' );
+	var units = {},
+		table = document.getElementById( 'twa-troopcounter' ),
+		img = document.getElementById( 'units_table' ).getElementsByTagName( 'tr' )[ 0 ].getElementsByTagName( 'img' ),
+		tbody = document.getElementById( 'units_table' ).getElementsByTagName( 'tbody' ),
+		mytr = table.getElementsByTagName( 'tbody' )[ 0 ].getElementsByTagName( 'tr' );
 	
 	for ( var i = 0; i < img.length; i++ ) {
 		units[ img[ i ].src.match( /_(\w+)\.png/ )[ 1 ] ] = [

@@ -2,8 +2,6 @@ TWA.attackplanner = {
 	villages: {},
 	edit: false,
 	init: function() {
-		console.log('TWA.attackplanner()');
-		
 		var inputUnits = '';
 		
 		for ( var name in TWA.data.units ) {
