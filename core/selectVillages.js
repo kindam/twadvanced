@@ -162,8 +162,8 @@ TWA.selectVillages = {
 			
 			return pop;
 		},
-		unitsatt: [ 'axe', 'light', 'marcher', 'ram', 'catapult', 'knight', 'snob' ],
-		unitsdef: [ 'light', 'sword', 'archer', 'heavy' ],
+		unitsatt: [ 'axe', 'light', 'marcher', 'ram', 'catapult', 'knight' ],
+		unitsdef: [ 'spear', 'sword', 'archer', 'heavy' ],
 		unitsorder: []
 	}
 };
