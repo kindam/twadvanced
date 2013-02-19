@@ -355,6 +355,7 @@ jQuery.fn.checkStyle = function() {
 		num: function( event ) { return event.keyCode > 47 && event.keyCode < 58; },
 		space: function( event ) { return event.keyCode === 32 },
 		enter: function( event ) { return event.keyCode === 13 },
+		tab: function( event ) { return event.keyCode === 9 },
 		'|': function( event ) { return event.keyCode === 226 && event.shiftKey },
 		':': function( event ) { return event.keyCode === 191 && event.shiftKey },
 		'/': function( event ) { return ( event.keyCode === 193 || event.keyCode === 81 ) && event.altKey && !event.shiftKey }
@@ -370,7 +371,7 @@ jQuery.fn.checkStyle = function() {
 		
 		for ( var i = 0; i < props.length; i++ ) {
 			if ( codes[ props[ i ] ]( event ) ) {
-				return true;
+				return props[ i ];
 			}
 		}
 		
@@ -379,8 +380,9 @@ jQuery.fn.checkStyle = function() {
 	
 	jQuery.fn.acceptOnly = function( props, callback ) {
 		return this.keydown(function( event ) {
-			if ( parse( props, event ) ) {
-				callback.call( this, event );
+			var prop = parse( props, event );
+			if ( prop ) {
+				callback.call( this, event, prop );
 				return true;
 			} else {
 				return event.preventDefault();
