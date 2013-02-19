@@ -2,7 +2,9 @@
 	var page = 0,
 		conquers = [],
 		waitList = {},
-		keydownHandler = function( event ) {
+		pageDown,
+		pageUp,
+		keydownHandler = function( event, first ) {
 			if ( event.keyCode === 13 ) {
 				var time = ( new Date().getTime() / 1000 ) - ( ( this.value > 24 ? 24 : this.value ) * 3600 );
 				
@@ -13,7 +15,7 @@
 						conquers.push( out[ i ] );
 					}
 					
-					TWA.lastConquests.post( page * 20, 20 );
+					TWA.lastConquests.post( page * 20, 20, first );
 				});
 			}
 		};
@@ -23,17 +25,15 @@
 			Style.add('lastConquests', {
 				'.lastConquests table': { width: '100%' },
 				'.lastConquests th': { 'text-align': 'center', background: '-special-linear-gradient(bottom, #BBB 30%, #CCC 100%) !important', padding: 7 },
-				'.lastConquests td': { 'text-align': 'center', padding: '7px 0', 'border-bottom': '1px solid rgba(0,0,0,.05)' },
+				'.lastConquests td': { 'text-align': 'center', padding: '7px 0', height: 15, 'border-bottom': '1px solid rgba(0,0,0,.05)' },
 				'.lastConquests .time': { 'text-align': 'center', padding: '3px 10px', width: 13 },
 			});
 			
-			Menu.add('lastConquests', lang.lastConquests.lastConquests, '<p>' + lang.lastConquests.loadLast + ' <input type="text" class="time twaInput" value="1"/> ' + lang.lastConquests.hours + '. (max 24h)</p><table style="height:675px"><thead><tr><th>' + lang.lastConquests.village + '</th><th style="width:150px">' + lang.lastConquests.date + '</th><th>' + lang.lastConquests.newOwn + '</th><th>' + lang.lastConquests.oldOwn + '</th></tr></thead><tbody></tbody></table><table><tr><td><a href="#" id="twaPageUp" style="display:none">' + lang.lastConquests.pageUp + '</a></td><td><a href="#" id="twaPageDown">' + lang.lastConquests.pageUp + '</a></td></tr></table>', function() {
+			Menu.add('lastConquests', lang.lastConquests.lastConquests, '<p>' + lang.lastConquests.loadLast + ' <input type="text" class="time twaInput" value="1"/> ' + lang.lastConquests.hours + '. (max 24h)</p><table><thead><tr><th>' + lang.lastConquests.village + '</th><th style="width:150px">' + lang.lastConquests.date + '</th><th>' + lang.lastConquests.newOwn + '</th><th>' + lang.lastConquests.oldOwn + '</th></tr></thead><tbody></tbody></table><table><tr><td><a href="#" id="twaPageUp" style="display:none">' + lang.lastConquests.pageUp + '</a></td><td><a href="#" id="twaPageDown">' + lang.lastConquests.pageDown + '</a></td></tr></table>', function() {
 				var table = this.find( 'tbody:first' ).empty();
-					$time = this.find( '.time' ).acceptOnly( 'num enter', keydownHandler ),
-					pageUp = jQuery( '#twaPageUp' ),
-					pageDown = jQuery( '#twaPageDown' );
-				
-				keydownHandler.call( $time[ 0 ], { keyCode: 13 } );
+				pageUp = jQuery( '#twaPageUp' ),
+				pageDown = jQuery( '#twaPageDown' );
+				keydownHandler.call( this.find( '.time' ).acceptOnly( 'num enter', keydownHandler )[ 0 ], { keyCode: 13 }, true );
 				
 				pageUp.click(function() {
 					pageUp.attr( 'colspan', 1 );
@@ -77,7 +77,7 @@
 				jQuery( '.' + type + id ).text( waitList[ type + id ] );
 			}
 		},
-		post: function( from, limit ) {
+		post: function( from, limit, first ) {
 			var table = jQuery( '.lastConquests tbody:first' ).empty();
 			
 			for ( var i = from; i < from + limit; i++ ) {
@@ -90,6 +90,10 @@
 				TWA.lastConquests.load( 'village', conquer[ 0 ] );
 				TWA.lastConquests.load( 'player', conquer[ 2 ] );
 				TWA.lastConquests.load( 'player', conquer[ 3 ] );
+			}
+			
+			if ( first && i < 20 ) {
+				pageDown.hide();
 			}
 		}
 	};
