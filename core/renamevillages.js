@@ -69,20 +69,15 @@ TWA.renamevillages = {
 		var elems = jQuery( '.overview_table tr[class]' + ( selected ? ':has(.addcheckbox:checked)' : '' ) ).get(),
 			index = overview === 'groups' ? 3 : 2,
 			elem,
-			name;
+			name,
+			vid;
 		
 		for ( var i = 0; i < elems.length; i++ ) {
-			elem = elems[ i ].getElementsByTagName( 'span' );
-			
-			if ( !elem || !elem[ index ] ) {
-				continue;
-			}
-			
+			vid = elems[ i ].getElementsByTagName( 'span' )[ 0 ].id.split( '_' )[ 1 ];
 			// substitue as mascaras
 			name = TWA.renamevillages.replace( TWA.renamevillages.newname, elems[ i ] );
-			
 			// chama função para renomear a aldeia
-			TWA.renamevillages.rename( elem[ index ].id.split( '_' )[ 1 ], name );
+			TWA.renamevillages.rename( vid, name );
 		}
 	},
 	rename: function( vid, name ) {
