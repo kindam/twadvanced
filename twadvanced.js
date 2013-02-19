@@ -18,7 +18,7 @@ overview = ( document.getElementById( 'overview' ) || { value: 'production' }).v
 $tooltip = jQuery( '<div id="twa-tooltip"/>' ).appendTo( 'body' ),
 // tabela com as funções utilizadas na visualização de aldeias
 $overviewTools;
-window.TWA = { version: '1.6.1' };
+window.TWA = { version: '1.6.2' };
 
 // LOAD METHODS HERE
 
@@ -436,7 +436,7 @@ menuButton.click(function() {
 var memory = { settings: 'TWASettings' + game_data.player.id, data: 'TWAData' + game_data.player.id },
 // servidor atual do jogo
 market = game_data.market === 'br' ? 'pt' : game_data.market,
-newversion = false;
+newVersion = false;
 
 // configurações e dados salvos
 TWA.settings = localStorage[ memory.settings ] ? JSON.parse( localStorage[ memory.settings ] ) : false;
@@ -458,7 +458,7 @@ if((function() {
 		// repassados ao novo e não perdelas
 		TWA.oldSettings = TWA.settings;
 		TWA.oldData = TWA.data;
-		newversion = true;
+		newVersion = true;
 		
 		return true;
 	}
@@ -520,8 +520,10 @@ var languages = {};
 
 var lang = !languages[ TWA.settings.lang ] ? languages.pt : languages[ TWA.settings.lang ];
 
-if ( newversion ) {
-	UI.addConfirmBox( 'Relaxeaza Tribal Wars Advanced - Version ' + TWA.version + '. <p><b>Changes/News:</b> <a href="https://github.com/relaxeaza/twadvanced/wiki/Tribal-Wars-Advanced">HERE</a></p>', function() {} );
+if ( newVersion ) {
+	Style.add('newVirsion', { '#newVersion span': { display: 'block', 'margin-bottom': 6, 'font-size': 11 } });
+	
+	UI.SuccessMessage( '<div id="newVersion"><b>Relaxeaza Tribal Wars Advanced - Version ' + TWA.version + '. </b><p>Alterações/Changes<br/> <span><b>Adicionado:</b> Ferramenta para mostrar as últimas conquistas do mundo.</span><span><b>Adicionado:</b> Agora é possivel trocar o tempo do planeador de ataques apenas apertando para cima/baixo.</span><span><b>Resolvido:</b> Problema ao renomear vários ataques de uma vez.</span><span><b>Resolvido:</b> Problema que fazia ataques do autofarm parar sozinho (ainda pode acontecer).</span><span><b>Adicionado:</b> Algumas traduções para o inglês/eslovaco estavam faltando.</span><span><b>Resolvido:</b> Ferramenta para calcular recursos e farmar aldeias pelo relatório foi reparado.</span><span><b>Adicionado:</b> Opção para enviar arietes diretamente do relatório de espionagem.</span><span><b>Resolvido:</b> Opção para selecinar apenas aldeias de ataque/defasa na visualização foi reparado.</span><span>Mais informações <a href="https://github.com/relaxeaza/twadvanced/wiki/Tribal-Wars-Advanced">aqui</a></span></p></div>', 60000 );
 }
 
 TWA.ready(function() {
