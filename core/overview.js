@@ -70,14 +70,14 @@ TWA.overview = {
 				table.innerHTML += '<tr class="twa-overview-' + vid + '"><td style="line-height:10px;white-space:nowrap">' + village.innerHTML + '<span style="text-align:right;font-size:9px;display:block;float:right;margin-left:30px">' + elems[ i ].getElementsByTagName( 'td' )[ 1 ].innerHTML + ' ' + lang.overview.points + ' (' + farm + ')</span></td>' + resourceHtml + '<td style="text-align:center">' + storage + '</td><td class="market" style="text-align:center"></td><td class="builds" style="text-align:center"></td><td class="research" style="text-align:center"></td><td class="recruit" style="text-align:center"></td></tr>';
 				
 				// pega os dados do mercado para adicionar na tabela
-				jQuery.get(TWA.url( 'market', vid ), function( html ) {
+				jQuery.get(Url( 'market', vid ), function( html ) {
 					var traders = jQuery( 'th:first', html );
 					
-					table.getElementsByTagName( 'td' )[ 6 ].innerHTML = traders.length ? '<a href="' + TWA.url( 'market' ) + '">' + traders[ 0 ].innerHTML.match( /\d+\/\d+/ )[ 0 ] + '</a>' : '0/0';
+					table.getElementsByTagName( 'td' )[ 6 ].innerHTML = traders.length ? '<a href="' + Url( 'market' ) + '">' + traders[ 0 ].innerHTML.match( /\d+\/\d+/ )[ 0 ] + '</a>' : '0/0';
 				});
 				
 				// pega os edificios que estão em contrução para adicionar na tabela
-				jQuery.get(TWA.url( 'main', vid ), function( html ) {
+				jQuery.get(Url( 'main', vid ), function( html ) {
 					var imgs = '',
 						builds = jQuery( '#buildqueue tr:gt(0)', html ).get();
 					
@@ -89,7 +89,7 @@ TWA.overview = {
 				});
 				
 				// pega as unidades em recrutamento para adicionar na tabela
-				jQuery.get(TWA.url( 'train', vid ), function( html ) {
+				jQuery.get(Url( 'train', vid ), function( html ) {
 					var imgs = '',
 						recruits = jQuery( '.trainqueue_wrap tr[class]', html).get(),
 						data,
@@ -108,7 +108,7 @@ TWA.overview = {
 				});
 				
 				// pega as pesquisas em andamento para adicionar na tabela
-				jQuery.get(TWA.url( 'smith', vid ), function( html ) {
+				jQuery.get(Url( 'smith', vid ), function( html ) {
 					var imgs = '',
 						researchs = jQuery('#current_research tr[class]', html).get();
 					
@@ -124,7 +124,15 @@ TWA.overview = {
 			jQuery( '.overview_table' ).replaceWith( table );
 		},
 		combined: function() {
-			var table = buildFragment( '<table id="combined_table" class="vis overview_table" width="100%"><thead>' + createStringList( '<style>.overview_table th{text-align:center}</style><tr><th width="400px" style="text-align:left">' + lang.overview.village + '</th><th><img src="http://cdn2.tribalwars.net/graphic/overview/main.png"/></th><th><img src="http://cdn2.tribalwars.net/graphic/overview/barracks.png"/></th><th><img src="http://cdn2.tribalwars.net/graphic/overview/stable.png"/></th><th><img src="http://cdn2.tribalwars.net/graphic/overview/garage.png"/></th><th><img src="http://cdn2.tribalwars.net/graphic/overview/smith.png"/></th><th><img src="http://cdn2.tribalwars.net/graphic/overview/farm.png"/></th>', TWA.data.units, '<th><img src="http://cdn2.tribalwars.net/graphic/unit/unit_{0}.png"/></th>', true ) + '<th><img src="http://cdn2.tribalwars.net/graphic/overview/trader.png"/></th></tr></thead></table>' ),
+			Style.add('overview', {
+				'.overview_table th': { 'text-align': 'center' }
+			});
+			
+			var trs = createString(TWA.data.units, function( key ) {
+				return '<th><img src="http://cdn2.tribalwars.net/graphic/unit/unit_' + key + '.png"/></th>';
+			}, '<tr><th width="400px" style="text-align:left">' + lang.overview.village + '</th><th><img src="http://cdn2.tribalwars.net/graphic/overview/main.png"/></th><th><img src="http://cdn2.tribalwars.net/graphic/overview/barracks.png"/></th><th><img src="http://cdn2.tribalwars.net/graphic/overview/stable.png"/></th><th><img src="http://cdn2.tribalwars.net/graphic/overview/garage.png"/></th><th><img src="http://cdn2.tribalwars.net/graphic/overview/smith.png"/></th><th><img src="http://cdn2.tribalwars.net/graphic/overview/farm.png"/></th>');
+			
+			var table = jQuery( '<table id="combined_table" class="vis overview_table" width="100%"><thead>' + trs + '<th><img src="http://cdn2.tribalwars.net/graphic/overview/trader.png"/></th></tr></thead></table>' ),
 				elems = jQuery( '.overview_table tr[class]' ).get(),
 				tds,
 				vid,
@@ -163,21 +171,22 @@ TWA.overview = {
 			for ( var i = 0; i < elems.length; i++ ) {
 				// clona o elemento com nome e entrada para renomear
 				village = elems[ i ].getElementsByTagName( 'td' )[ 0 ].cloneNode( true );
+				
 				// id da aldeia
 				vid = village.getElementsByTagName( 'a' )[ 0 ].href.match( /village=(\d+)/ )[ 1 ];
 				
 				// novo HTML da aldeia na tabela
-				table.innerHTML += '<tr class="' + elems[ i ].className + ' twa-overview-' + vid + '">' + createStringList( '<td style="line-height:10px;white-space:nowrap">' + village.innerHTML + '<span style="text-align:right;font-size:9px;display:block;float:right;margin-left:30px">' + elems[ i ].getElementsByTagName( 'td' )[ 1 ].innerHTML + ' ' + lang.overview.points + '</span></td><td class="main"></td><td class="barracks"></td><td class="stable"></td><td class="garage"></td><td class="smith"></td><td><a href="' + TWA.url( 'farm', vid ) + '">' + elems[ i ].getElementsByTagName( 'td' )[ 4 ].innerHTML + '</a></td>', TWA.data.units, '<td class="unit-item {0}"></td>', true ) + '<td class="market"></td></tr>';
+				table[ 0 ].innerHTML += '<tr class="' + elems[ i ].className + ' twa-overview-' + vid + '">' + createString( TWA.data.units, function( unit ) { return '<td class="unit-item ' + unit + '"></td>' }, '<td style="line-height:10px;white-space:nowrap">' + village.innerHTML + '<span style="text-align:right;font-size:9px;display:block;float:right;margin-left:30px">' + elems[ i ].getElementsByTagName( 'td' )[ 1 ].innerHTML + ' ' + lang.overview.points + '</span></td><td class="main"></td><td class="barracks"></td><td class="stable"></td><td class="garage"></td><td class="smith"></td><td><a href="' + Url( 'farm', vid ) + '">' + elems[ i ].getElementsByTagName( 'td' )[ 4 ].innerHTML + '</a></td>' ) + '<td class="market"></td></tr>';
 				
 				// todos os elementos TD da aldeia na tabela
-				tds = table.getElementsByTagName( 'tr' )[ elems.length ].getElementsByTagName( 'td' );
+				tds = table[ 0 ].getElementsByTagName( 'tr' )[ elems.length ].getElementsByTagName( 'td' );
 				
 				// obtem as informações das contruções
-				jQuery.get(TWA.url( 'main' ), function( html ) {
+				jQuery.get(Url( 'main' ), function( html ) {
 					insert( '#buildqueue', html, tds[ 2 ] );
 				});
 				
-				jQuery.get(TWA.url( 'train' ), function( html ) {
+				jQuery.get(Url( 'train' ), function( html ) {
 					// obtem a quantidade de tropas na aldeia
 					var troops = {},
 						troopsElem = jQuery( '#train_form tr[class]', html ).get(),
@@ -212,23 +221,23 @@ TWA.overview = {
 				});
 				
 				// obtem as informações das pesquisas
-				jQuery.get(TWA.url( 'smith' ), function( html ) {
+				jQuery.get(Url( 'smith' ), function( html ) {
 					insert( '#current_research', html, tds[ 6 ] );
 				});
 				
 				// obtem as informações do mercado
-				jQuery.get(TWA.url( 'market' ), function( html ) {
+				jQuery.get(Url( 'market' ), function( html ) {
 					var elem = jQuery( 'th:first', html )[ 0 ];
 					
 					if ( !elem ) {
 						return tds[ tds.length - 1 ].innerHTML = '-';
 					}
 					
-					tds[ tds.length - 1 ].innerHTML = '<a href="' + TWA.url( 'market' ) + '">' + elem.innerHTML.match( /(\d+\/\d+)/ )[ 1 ] + '</a>';
+					tds[ tds.length - 1 ].innerHTML = '<a href="' + Url( 'market' ) + '">' + elem.innerHTML.match( /(\d+\/\d+)/ )[ 1 ] + '</a>';
 				});
 			}
 			
-			return table;
+			return table[ 0 ];
 		}
 	}
 };

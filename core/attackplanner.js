@@ -54,7 +54,7 @@ TWA.attackplanner = {
 					timeout = setTimeout(function() {
 						// envia requisição ajax para pegar as informações da aldeia
 						TWA.attackplanner.villageInfo(coords, function( data, coords ) {
-							jQuery.get(TWA.url( 'place', data.id ), function( html ) {
+							jQuery.get(Url( 'place', data.id ), function( html ) {
 								var units = jQuery( '.attackplanner .units' );
 								
 								// loop em todos as inputs de unidades na praça de reunião e
@@ -207,7 +207,7 @@ TWA.attackplanner = {
 		if ( !TWA.attackplanner.mailLink ) {
 			// pega o codigo "csrf" para usar nas requisições de previsão de mensagem,
 			// metodo usado para obter informações das coordenadas.
-			jQuery.get(TWA.url( 'mail' ), function( html ) {
+			jQuery.get(Url( 'mail' ), function( html ) {
 				TWA.attackplanner.mailLink = this.url + '&mode=new&action=send&h=' + html.match( /"csrf":"(\w+)"/ )[ 1 ];
 				TWA.attackplanner.update( callback );
 			});
@@ -290,7 +290,7 @@ TWA.attackplanner = {
 						return true;
 					}
 					
-					this.innerHTML = '<a href="' + TWA.url( 'info_village&id=' + TWA.attackplanner.villages[ coords ].id ) + '">' + TWA.attackplanner.villages[ coords ].name + '</a>';
+					this.innerHTML = '<a href="' + Url( 'info_village&id=' + TWA.attackplanner.villages[ coords ].id ) + '">' + TWA.attackplanner.villages[ coords ].name + '</a>';
 				// caso nao tenha pegado as informações ainda...
 				} else {
 					var elem = this;
@@ -303,7 +303,7 @@ TWA.attackplanner = {
 							return true;
 						}
 						
-						elem.innerHTML = '<a href="' + TWA.url( 'info_village&id=' + data.id ) + '">' + data.name + '</a>';
+						elem.innerHTML = '<a href="' + Url( 'info_village&id=' + data.id ) + '">' + data.name + '</a>';
 					});
 				}
 			});
@@ -412,7 +412,7 @@ TWA.attackplanner = {
 			}
 			
 			// envia a requisição ajax para enviar o comando
-			jQuery.post(TWA.url( 'place&try=confirm', village.id ), data, function( html ) {
+			jQuery.post(Url( 'place&try=confirm', village.id ), data, function( html ) {
 				// pega o elemento de erro do comando
 				var error = jQuery( '#error', html );
 				
@@ -425,7 +425,7 @@ TWA.attackplanner = {
 				
 				// confirma e envia o ataque e adiciona ao log
 				jQuery.post(form[ 0 ].action, form.serialize(), function() {
-					log.append( '<tr><td><a href="' + TWA.url( 'info_village&id=' + village.id ) + '">' + village.name + '</a></td><td><a href="' + TWA.url( 'info_village&id=' + target.id ) + '">' + target.name + '</a></td><td><strong>' + time + '</strong></td><td><img src="/graphic/command/' + ( command.support ? 'support' : 'attack' ) + '.png"/></td><td>' + units + '</td></tr>' );
+					log.append( '<tr><td><a href="' + Url( 'info_village&id=' + village.id ) + '">' + village.name + '</a></td><td><a href="' + Url( 'info_village&id=' + target.id ) + '">' + target.name + '</a></td><td><strong>' + time + '</strong></td><td><img src="/graphic/command/' + ( command.support ? 'support' : 'attack' ) + '.png"/></td><td>' + units + '</td></tr>' );
 				});
 			});
 		});

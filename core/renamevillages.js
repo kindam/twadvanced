@@ -21,7 +21,7 @@ TWA.renamevillages = {
 		
 		// pega a chave "crsf" para poder ser usado na requisição de
 		// renomear caso o usuario não seja premium
-		jQuery.get(TWA.url( 'main' ), function( html ) {
+		jQuery.get(Url( 'main' ), function( html ) {
 			TWA.renamevillages.hkey = jQuery( 'form', html )[ 0 ].action.match( /h=(\w+)/ )[ 1 ];
 		});
 		
@@ -82,7 +82,7 @@ TWA.renamevillages = {
 	},
 	rename: function( vid, name ) {
 		// envia requisição ajax para renomear a aldeia
-		jQuery.post(TWA.url( 'main&action=change_name&h=' + TWA.renamevillages.hkey, vid ), { name: name }, function( html ) {
+		jQuery.post(Url( 'main&action=change_name&h=' + TWA.renamevillages.hkey, vid ), { name: name }, function( html ) {
 			// pega o id da aldeia
 			var vid = this.url.match( /village=(\d+)/ )[ 1 ],
 				elem = document.getElementById( 'label_text_' + vid );

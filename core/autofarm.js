@@ -127,7 +127,7 @@ TWA.autofarm = {
 		}
 		
 		jQuery.ajax({
-			url: TWA.url( 'place&try=confirm' ),
+			url: Url( 'place&try=confirm' ),
 			type: 'post',
 			data: TWA.autofarm.data,
 			success: function( html ) {
@@ -262,7 +262,7 @@ TWA.autofarm = {
 				return TWA.autofarm.pageLoad();
 			}
 			
-			jQuery.get( TWA.url( pages[ Math.floor( Math.random() * pages.length ) ] ), function() { TWA.autofarm.pageLoad(); } );
+			jQuery.get( Url( pages[ Math.floor( Math.random() * pages.length ) ] ), function() { TWA.autofarm.pageLoad(); } );
 		}, Math.random() * 20000);
 	}
 };

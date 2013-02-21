@@ -70,7 +70,7 @@
 			if ( !waitList[ type + id ] ) {
 				waitList[ type + id ] = true;
 				
-				jQuery.get(TWA.url( 'info_' + type + '&id=' + id ), function( html ) {
+				jQuery.get(Url( 'info_' + type + '&id=' + id ), function( html ) {
 					jQuery( '.' + type + id ).text( waitList[ type + id ] = jQuery( 'h2', html ).text() );
 				});
 			} else if ( typeof waitList[ type + id ] === 'string' ) {
@@ -86,7 +86,7 @@
 				}
 				
 				var conquer = conquers[ i ].split( ',' );
-				jQuery( '<tr><td><a class="village' + conquer[ 0 ] + '" href="' + TWA.url( 'info_village&id=' + conquer[ 0 ] ) + '"></a></td><td class="time">' + timeFormat( conquer[ 1 ] * 1000 ) + '</td><td><a class="player' + conquer[ 2 ] + '" href="' + TWA.url( 'info_player&id=' + conquer[ 2 ] ) + '"></a></td><td><a class="player' + conquer[ 3 ] + '" href="' + TWA.url( 'info_player&id=' + conquer[ 3 ] ) + '"></a></td></tr>' ).appendTo( table );
+				jQuery( '<tr><td><a class="village' + conquer[ 0 ] + '" href="' + Url( 'info_village&id=' + conquer[ 0 ] ) + '"></a></td><td class="time">' + timeFormat( conquer[ 1 ] * 1000 ) + '</td><td><a class="player' + conquer[ 2 ] + '" href="' + Url( 'info_player&id=' + conquer[ 2 ] ) + '"></a></td><td><a class="player' + conquer[ 3 ] + '" href="' + Url( 'info_player&id=' + conquer[ 3 ] ) + '"></a></td></tr>' ).appendTo( table );
 				TWA.lastConquests.load( 'village', conquer[ 0 ] );
 				TWA.lastConquests.load( 'player', conquer[ 2 ] );
 				TWA.lastConquests.load( 'player', conquer[ 3 ] );

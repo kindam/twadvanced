@@ -86,22 +86,54 @@ jQuery.fn.tooltip = jQuery.tooltip = function( elems ) {
 	});
 };
 
-// facilita criar strings que vão arrays inteiros no meio
-function createStringList( start, object, springf, key ) {
-	var str = start || '', i, n, val;
+// jQuery( checkbox ).checkStyle()
+// adiciona estilos nos checkbox.
+jQuery.fn.checkStyle = function() {
+	this.hide().each(function() {
+		var checked,
+		input = jQuery( this ),
+		elem = jQuery( '<a class="checkStyle"></a>' ).click(function() {
+			elem = jQuery( this );
+			var checked = elem.hasClass( 'checked' );
+			elem[ elem.hasClass( 'checked' ) ? 'removeClass' : 'addClass' ]( 'checked' );
+			input.attr( 'checked', !checked );
+			
+			return false;
+		}).insertAfter( this );
+		
+		if ( input.is( ':checked' ) ) {
+			elem.addClass( 'checked' );
+		}
+		
+		if ( this.parentElement.nodeName.toLowerCase() === 'label' ) {
+			jQuery( this ).click(function() {
+				elem.trigger( 'click' );
+			});
+		}
+	});
+};
+
+// facilita criar strings que vão arrays/objetos no meio
+function createString( obj, callback, init, end ) {
+	if ( typeof callback === 'string' ) {
+		end = init;
+		init = callback;
+		callback = false;
+	}
 	
-	if ( object.length ) {
-		for ( i = 0; i < object.length; i++ ) {
-			str += springf ? springf.springf( object[ i ] ) : object[ i ];
+	init = init || '';
+	
+	if ( jQuery.isPlainObject(obj) ) {
+		for ( var i in obj ) {
+			init += callback ? callback.call( obj[ i ], i, obj[ i ] ) : obj[ i ];
 		}
 	} else {
-		for ( n in object ) {
-			val = key ? n : object[ n ];
-			str += springf ? springf.springf( val ) : val;
+		for ( var i = 0; i < obj.length; i++ ) {
+			init += callback ? callback.call( obj[ i ], i, obj[ i ] ) : obj[ i ];
 		}
 	}
 	
-	return str;
+	return init + ( end || '' );
 }
 
 // extrai os elementos apartir de uma string
@@ -159,6 +191,44 @@ function validTime( dateTime ) {
 	}
 	
 	return valid;
+}
+
+// pega o url correto do jogo
+function Url( screen, vid ) {
+	return game_data.link_base_pure.replace( /village=\d+/, 'village=' + ( vid || game_data.village.id ) ) + screen;
+}
+
+// adiciona as caixas para selecionar as aldeias na vizualização
+function addCheckbox() {
+	var stop = [ 'trader', 'groups', 'commands', 'incomings' ],
+		table, tr;
+	
+	if ( stop.indexOf( overview ) >= 0 ) {
+		return;
+	} else if ( overview == 'units' ) {
+		table = document.getElementById( 'units_table' );
+		
+		var tbody = table.getElementsByTagName( 'tbody' ),
+			th = table.getElementsByTagName( 'th' )[ 0 ],
+			tbodyTr;
+		
+		th.innerHTML = '<input type="checkbox" style="margin:0px" id="twa-selectAll"/> ' + th.innerHTML;
+		
+		for ( var i = 0; i < tbody.length; i++ ) {
+			tbodyTr = tbody[ i ].getElementsByTagName( 'tr' )[ 0 ];
+			tbodyTr.getElementsByTagName( 'td' )[ 0 ].innerHTML = '<input type="checkbox" name="village_ids[]" class="addcheckbox" style="margin:0px" value="' + jQuery( 'a[href*="village="]:first', tbody[ i ] )[ 0 ].href.match( /village=(\d+)/ )[ 1 ] + '"/>' + tbodyTr.getElementsByTagName( 'td' )[ 0 ].innerHTML;
+		}
+	} else {
+		tr = jQuery( '.overview_table' )[ 0 ].getElementsByTagName( 'tr' );
+		
+		for ( var i = 0; i < tr.length; i++ ) {
+			tr[ i ].innerHTML = ( !i ? '<th><input type="checkbox" id="twa-selectAll"/></th>' : '<td><input type="checkbox" name="village_ids[]" class="addcheckbox" value="' + jQuery( 'a[href*="village="]:first', tr[ i ] )[ 0 ].href.match( /village=(\d+)/ )[ 1 ] + '"/></td>' ) + tr[ i ].innerHTML;
+		}
+	}
+	
+	jQuery( '#twa-selectAll' ).click(function() {
+		jQuery( '.addcheckbox:visible' ).attr( 'checked', this.checked );
+	});
 }
 
 // manipulado de estilos css
@@ -225,30 +295,6 @@ var Style = (function() {
 	return new Style();
 })();
 
-// estilos CSS gerais
-Style.add('twa', {
-	'#twa-menuOpen': { margin: '0px 6px 0px 2px', 'border-radius': 4, padding: '0px 3px 2px 3px', 'font-family': 'courier new', border: '1px solid rgba(0,0,0,0.25)', background: '-special-linear-gradient(bottom, #e7e7e7 100%, #c5c5c5 0%)', cursor: 'pointer' },
-	'#twa-tooltip': { position: 'absolute', display: 'none', 'z-index': '999999', background: 'rgba(0,0,0,.8)', width: 300, color: '#ccc', padding: 4, 'border-radius': 2, 'box-shadow': '1px 1px 3px #333' },
-	'.twaInput': { background: '#F3F3F3', 'border-radius': 6, 'box-shadow': '0 1px 4px rgba(0,0,0,0.2) inset', 'font-family': 'courier new', border: '1px solid #bbb', color: '#555' },
-	'.twaButton': { 'border-radius': 3, margin: 10, padding: '7px 20px', background: '-special-linear-gradient(bottom, #CCC 0%, white 100%)', border: '1px solid #AAA', 'font-weight': 'bold' },
-	'.checkStyle': { display: 'block', 'float': 'left', background: 'url(http://i.imgur.com/MhppaVe.png) top left no-repeat', 'background-position': '-4px -5px', width: 21, height: 20 },
-	'.checkStyle.checked': { 'background-position': '-4px -65px' },
-	// table
-	'.twa-table': { width: '100%' },
-	'.twa-table th': { 'text-align': 'center', background: '-special-linear-gradient(bottom, #BBB 30%, #CCC 100%) !important', padding: '7px !important' },
-	'.twa-table td': { 'text-align': 'center', padding: '7px 0' },
-	// menu
-	'.twa-menu': { display: 'none', 'z-index': '12000', position: 'absolute', top: 130, 'font-family': 'Helvetica', 'font-size': 12, width: 1020, background: '#eee', color: '#333', border: 'solid 1px rgba(0,0,0,0.2)', 'border-radius': 4, 'box-shadow': '3px 3px 5px rgba(0,0,0,0.2)', margin: '0 auto 30px' },
-	'.twa-menu a': { 'font-weight': '700' },
-	'.twa-menu .head': { 'text-align': 'center', height: 25, 'border-bottom': '1px solid #ddd' },
-	'.twa-menu .head ul': { 'line-height': 15, padding: 0 },
-	'.twa-menu .head li': { 'list-style': 'none', display: 'inline', 'border-right': '1px solid #bbb', padding: '0 13px' },
-	'.twa-menu .head li:last-child': { border: 'none' },
-	'.twa-menu .head li a': { color: '#666', 'text-decoration': 'none', padding: 8, 'font-size': 13, 'border-radius': 10 },
-	'.twa-menu .head li a.active': { 'box-shadow': '0 0 5px #AAA inset' },
-	'.twa-menu .body': { padding: 10 }
-});
-
 // menu com ferramentas/configurações
 var Menu = (function() {
 	function center( elem ) {
@@ -256,11 +302,20 @@ var Menu = (function() {
 		return elem.css( 'left', Math.max( 0, ( ( $win.width() - elem.outerWidth() ) / 2 ) + $win.scrollLeft() ) );
 	}
 	
-	var Menu = function( pos ) {
+	var Menu = function( elemOpen, onclick, pos ) {
+		var self = this;
 		this.opened = false;
 		this._menus = {};
 		this._active = 'autofarm';
 		this.menu = jQuery( '<div class="twa-menu"><div class="head"><ul></ul></div><div class="body"></div></div>' ).appendTo( 'body' );
+		
+		elemOpen.click(function() {
+			if ( onclick.call( self ) === false ) {
+				return false;
+			}
+			
+			self[ self.menu.is( ':visible' ) ? 'hide' : 'show' ]();
+		});
 		
 		if ( !pos ) {
 			this.menu = center( this.menu );
@@ -319,35 +374,8 @@ var Menu = (function() {
 		}
 	};
 	
-	return new Menu();
+	return Menu;
 })();
-
-// jQuery( checkbox ).checkStyle()
-// adiciona estilos nos checkbox.
-jQuery.fn.checkStyle = function() {
-	this.hide().each(function() {
-		var checked,
-		input = jQuery( this ),
-		elem = jQuery( '<a class="checkStyle"></a>' ).click(function() {
-			elem = jQuery( this );
-			var checked = elem.hasClass( 'checked' );
-			elem[ elem.hasClass( 'checked' ) ? 'removeClass' : 'addClass' ]( 'checked' );
-			input.attr( 'checked', !checked );
-			
-			return false;
-		}).insertAfter( this );
-		
-		if ( input.is( ':checked' ) ) {
-			elem.addClass( 'checked' );
-		}
-		
-		if ( this.parentElement.nodeName.toLowerCase() === 'label' ) {
-			jQuery( this ).click(function() {
-				elem.trigger( 'click' );
-			});
-		}
-	});
-};
 
 // jQuery( elem ).acceptOnly()
 (function() {
@@ -391,52 +419,43 @@ jQuery.fn.checkStyle = function() {
 	};
 })();
 
-function addCheckbox() {
-	var stop = [ 'trader', 'groups', 'commands', 'incomings' ],
-		table, tr;
-	
-	if ( stop.indexOf( overview ) >= 0 ) {
-		return;
-	} else if ( overview == 'units' ) {
-		table = document.getElementById( 'units_table' );
-		
-		var tbody = table.getElementsByTagName( 'tbody' ),
-			th = table.getElementsByTagName( 'th' )[ 0 ],
-			tbodyTr;
-		
-		th.innerHTML = '<input type="checkbox" style="margin:0px" id="twa-selectAll"/> ' + th.innerHTML;
-		
-		for ( var i = 0; i < tbody.length; i++ ) {
-			tbodyTr = tbody[ i ].getElementsByTagName( 'tr' )[ 0 ];
-			tbodyTr.getElementsByTagName( 'td' )[ 0 ].innerHTML = '<input type="checkbox" name="village_ids[]" class="addcheckbox" style="margin:0px" value="' + jQuery( 'a[href*="village="]:first', tbody[ i ] )[ 0 ].href.match( /village=(\d+)/ )[ 1 ] + '"/>' + tbodyTr.getElementsByTagName( 'td' )[ 0 ].innerHTML;
-		}
-	} else {
-		tr = jQuery( '.overview_table' )[ 0 ].getElementsByTagName( 'tr' );
-		
-		for ( var i = 0; i < tr.length; i++ ) {
-			tr[ i ].innerHTML = ( !i ? '<th><input type="checkbox" id="twa-selectAll"/></th>' : '<td><input type="checkbox" name="village_ids[]" class="addcheckbox" value="' + jQuery( 'a[href*="village="]:first', tr[ i ] )[ 0 ].href.match( /village=(\d+)/ )[ 1 ] + '"/></td>' ) + tr[ i ].innerHTML;
-		}
-	}
-	
-	jQuery( '#twa-selectAll' ).click(function() {
-		jQuery( '.addcheckbox:visible' ).attr( 'checked', this.checked );
-	});
-}
+// estilos CSS gerais
+Style.add('twa', {
+	'#twa-menuOpen': { margin: '0px 6px 0px 2px', 'border-radius': 4, padding: '0px 3px 2px 3px', 'font-family': 'courier new', border: '1px solid rgba(0,0,0,0.25)', background: '-special-linear-gradient(bottom, #e7e7e7 100%, #c5c5c5 0%)', cursor: 'pointer' },
+	'#twa-tooltip': { position: 'absolute', display: 'none', 'z-index': '999999', background: 'rgba(0,0,0,.8)', width: 300, color: '#ccc', padding: 4, 'border-radius': 2, 'box-shadow': '1px 1px 3px #333' },
+	'.twaInput': { background: '#F3F3F3', 'border-radius': 6, 'box-shadow': '0 1px 4px rgba(0,0,0,0.2) inset', 'font-family': 'courier new', border: '1px solid #bbb', color: '#555' },
+	'.twaButton': { 'border-radius': 3, margin: 10, padding: '7px 20px', background: '-special-linear-gradient(bottom, #CCC 0%, white 100%)', border: '1px solid #AAA', 'font-weight': 'bold' },
+	'.checkStyle': { display: 'block', 'float': 'left', background: 'url(http://i.imgur.com/MhppaVe.png) top left no-repeat', 'background-position': '-4px -5px', width: 21, height: 20 },
+	'.checkStyle.checked': { 'background-position': '-4px -65px' },
+	'.checkStyle.center': { margin: '0 auto' },
+	// table
+	'.twa-table': { width: '100%' },
+	'.twa-table th': { 'text-align': 'center', background: '-special-linear-gradient(bottom, #BBB 30%, #CCC 100%) !important', padding: '7px !important' },
+	'.twa-table td': { 'text-align': 'center', padding: '7px 0' },
+	// menu
+	'.twa-menu': { display: 'none', 'z-index': '12000', position: 'absolute', top: 130, 'font-family': 'Helvetica', 'font-size': 12, width: 1020, background: '#eee', color: '#333', border: 'solid 1px rgba(0,0,0,0.2)', 'border-radius': 4, 'box-shadow': '3px 3px 5px rgba(0,0,0,0.2)', margin: '0 auto 30px' },
+	'.twa-menu a': { 'font-weight': '700' },
+	'.twa-menu .head': { 'text-align': 'center', height: 25, 'border-bottom': '1px solid #ddd' },
+	'.twa-menu .head ul': { 'line-height': 15, padding: 0 },
+	'.twa-menu .head li': { 'list-style': 'none', display: 'inline', 'border-right': '1px solid #bbb', padding: '0 13px' },
+	'.twa-menu .head li:last-child': { border: 'none' },
+	'.twa-menu .head li a': { color: '#666', 'text-decoration': 'none', padding: 8, 'font-size': 13, 'border-radius': 10 },
+	'.twa-menu .head li a.active': { 'box-shadow': '0 0 5px #AAA inset' },
+	'.twa-menu .body': { padding: 10 }
+});
 
-menuButton.click(function() {
-	if ( !Menu.opened ) {
-		Menu.open();
-		Menu.opened = true;
+Menu = new Menu(menuButton, function() {
+	if ( !this.opened ) {
+		this.open();
+		this.opened = true;
 	}
-	
-	Menu[ Menu.menu.is( ':visible' ) ? 'hide' : 'show' ]();
 });
 
 // nome do items salvos em localStorage
 var memory = { settings: 'TWASettings' + game_data.player.id, data: 'TWAData' + game_data.player.id },
 // servidor atual do jogo
 market = game_data.market === 'br' ? 'pt' : game_data.market,
-newVersion = false;
+update = false;
 
 // configurações e dados salvos
 TWA.settings = localStorage[ memory.settings ] ? JSON.parse( localStorage[ memory.settings ] ) : false;
@@ -458,7 +477,9 @@ if((function() {
 		// repassados ao novo e não perdelas
 		TWA.oldSettings = TWA.settings;
 		TWA.oldData = TWA.data;
-		newVersion = true;
+		
+		Style.add('update', { '#newVersion span': { display: 'block', 'margin-bottom': 6, 'font-size': 11 } });
+		UI.SuccessMessage( '<div id="newVersion"><b>Relaxeaza Tribal Wars Advanced - Version ' + TWA.version + '. </b><p>Alterações/Changes<br/> <span><b>Adicionado:</b> Ferramenta para mostrar as últimas conquistas do mundo.</span><span><b>Adicionado:</b> Agora é possivel trocar o tempo do planeador de ataques apenas apertando para cima/baixo.</span><span><b>Resolvido:</b> Problema ao renomear vários ataques de uma vez.</span><span><b>Resolvido:</b> Problema que fazia ataques do autofarm parar sozinho (ainda pode acontecer).</span><span><b>Adicionado:</b> Algumas traduções para o inglês/eslovaco estavam faltando.</span><span><b>Resolvido:</b> Ferramenta para calcular recursos e farmar aldeias pelo relatório foi reparado.</span><span><b>Adicionado:</b> Opção para enviar arietes diretamente do relatório de espionagem.</span><span><b>Resolvido:</b> Opção para selecinar apenas aldeias de ataque/defasa na visualização foi reparado.</span><span>Mais informações <a href="https://github.com/relaxeaza/twadvanced/wiki/Tribal-Wars-Advanced">aqui</a></span></p></div>', 60000 );
 		
 		return true;
 	}
@@ -519,12 +540,6 @@ var languages = {};
 // LOAD LANGS HERE
 
 var lang = !languages[ TWA.settings.lang ] ? languages.pt : languages[ TWA.settings.lang ];
-
-if ( newVersion ) {
-	Style.add('newVirsion', { '#newVersion span': { display: 'block', 'margin-bottom': 6, 'font-size': 11 } });
-	
-	UI.SuccessMessage( '<div id="newVersion"><b>Relaxeaza Tribal Wars Advanced - Version ' + TWA.version + '. </b><p>Alterações/Changes<br/> <span><b>Adicionado:</b> Ferramenta para mostrar as últimas conquistas do mundo.</span><span><b>Adicionado:</b> Agora é possivel trocar o tempo do planeador de ataques apenas apertando para cima/baixo.</span><span><b>Resolvido:</b> Problema ao renomear vários ataques de uma vez.</span><span><b>Resolvido:</b> Problema que fazia ataques do autofarm parar sozinho (ainda pode acontecer).</span><span><b>Adicionado:</b> Algumas traduções para o inglês/eslovaco estavam faltando.</span><span><b>Resolvido:</b> Ferramenta para calcular recursos e farmar aldeias pelo relatório foi reparado.</span><span><b>Adicionado:</b> Opção para enviar arietes diretamente do relatório de espionagem.</span><span><b>Resolvido:</b> Opção para selecinar apenas aldeias de ataque/defasa na visualização foi reparado.</span><span>Mais informações <a href="https://github.com/relaxeaza/twadvanced/wiki/Tribal-Wars-Advanced">aqui</a></span></p></div>', 60000 );
-}
 
 TWA.ready(function() {
 	switch( game_data.screen ) {

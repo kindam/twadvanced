@@ -23,7 +23,7 @@ TWA.changegroups = {
 			value: button.value
 		});
 		
-		jQuery.post(TWA.url( 'overview_villages&mode=groups&action=bulk_edit_villages&h=' + game_data.csrf ), data, function() {
+		jQuery.post(Url( 'overview_villages&mode=groups&action=bulk_edit_villages&h=' + game_data.csrf ), data, function() {
 			jQuery( '#twa-loader' ).hide();
 		});
 	},

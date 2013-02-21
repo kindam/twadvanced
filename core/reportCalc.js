@@ -55,7 +55,7 @@ TWA.reportCalc = function() {
 		
 		// ao clicar no botão para enviar ataque...
 		attackButton.click(function() {
-			jQuery.post(TWA.url( 'place&try=confirm', vid ), jQuery.extend({
+			jQuery.post(Url( 'place&try=confirm', vid ), jQuery.extend({
 				x: coords[ 0 ],
 				y: coords[ 1 ],
 				attack: true

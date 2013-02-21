@@ -48,7 +48,7 @@ TWA.ready = function( callback ) {
 		TWA.data.world = {};
 		TWA.data.units = {};
 		
-		jQuery.when( jQuery.get( TWA.url( 'main' ) ), jQuery.get( 'interface.php?func=get_config' ), jQuery.get( 'interface.php?func=get_unit_info' ) ).done( success );
+		jQuery.when( jQuery.get( Url( 'main' ) ), jQuery.get( 'interface.php?func=get_config' ), jQuery.get( 'interface.php?func=get_unit_info' ) ).done( success );
 	} else {
 		callback();
 	}
