@@ -33,7 +33,7 @@ TWA.overview = {
 	},
 	modes: {
 		production: function() {
-			var table = buildFragment( '<table id="production_table" class="vis overview_table" width="100%"><thead><tr><th width="400px">' + lang.overview.village + '</th><th style="width:50px;text-align:center">' + lang.overview.wood + '</th><th style="width:50px;text-align:center">' + lang.overview.stone + '</th><th style="width:50px;text-align:center">' + lang.overview.stone + '</th><th style="width:46px;text-align:center"><span class="icon header ressources"></span></th><th style="width:53px;text-align:center"><img src="http://cdn2.tribalwars.net/graphic/overview/trader.png"/></th><th>' + lang.overview.buildings + '</th><th>' + lang.overview.research + '</th><th>' + lang.overview.recruit + '</th></tr></thead></table>' ),
+			var table = jQuery( '<table id="production_table" class="vis overview_table" width="100%"><thead><tr><th width="400px">' + lang.overview.village + '</th><th style="width:50px;text-align:center">' + lang.overview.wood + '</th><th style="width:50px;text-align:center">' + lang.overview.stone + '</th><th style="width:50px;text-align:center">' + lang.overview.stone + '</th><th style="width:46px;text-align:center"><span class="icon header ressources"></span></th><th style="width:53px;text-align:center"><img src="http://cdn2.tribalwars.net/graphic/overview/trader.png"/></th><th>' + lang.overview.buildings + '</th><th>' + lang.overview.research + '</th><th>' + lang.overview.recruit + '</th></tr></thead></table>' ),
 				elems = jQuery( '.overview_table tr[class]' ).get(),
 				vid,
 				village,
@@ -67,13 +67,13 @@ TWA.overview = {
 				span.style.display = 'block';
 				span.style[ 'float' ] = 'left'
 				
-				table.innerHTML += '<tr class="twa-overview-' + vid + '"><td style="line-height:10px;white-space:nowrap">' + village.innerHTML + '<span style="text-align:right;font-size:9px;display:block;float:right;margin-left:30px">' + elems[ i ].getElementsByTagName( 'td' )[ 1 ].innerHTML + ' ' + lang.overview.points + ' (' + farm + ')</span></td>' + resourceHtml + '<td style="text-align:center">' + storage + '</td><td class="market" style="text-align:center"></td><td class="builds" style="text-align:center"></td><td class="research" style="text-align:center"></td><td class="recruit" style="text-align:center"></td></tr>';
+				table[0].innerHTML += '<tr class="twa-overview-' + vid + '"><td style="line-height:10px;white-space:nowrap">' + village.innerHTML + '<span style="text-align:right;font-size:9px;display:block;float:right;margin-left:30px">' + elems[ i ].getElementsByTagName( 'td' )[ 1 ].innerHTML + ' ' + lang.overview.points + ' (' + farm + ')</span></td>' + resourceHtml + '<td style="text-align:center">' + storage + '</td><td class="market" style="text-align:center"></td><td class="builds" style="text-align:center"></td><td class="research" style="text-align:center"></td><td class="recruit" style="text-align:center"></td></tr>';
 				
 				// pega os dados do mercado para adicionar na tabela
 				jQuery.get(Url( 'market', vid ), function( html ) {
 					var traders = jQuery( 'th:first', html );
 					
-					table.getElementsByTagName( 'td' )[ 6 ].innerHTML = traders.length ? '<a href="' + Url( 'market' ) + '">' + traders[ 0 ].innerHTML.match( /\d+\/\d+/ )[ 0 ] + '</a>' : '0/0';
+					table[0].getElementsByTagName( 'td' )[ 6 ].innerHTML = traders.length ? '<a href="' + Url( 'market' ) + '">' + traders[ 0 ].innerHTML.match( /\d+\/\d+/ )[ 0 ] + '</a>' : '0/0';
 				});
 				
 				// pega os edificios que estão em contrução para adicionar na tabela
@@ -85,7 +85,7 @@ TWA.overview = {
 						imgs += '<img style="margin-right:2px" src="' + jQuery( '#buildings tr:not(:first) td:has(a:contains(' + jQuery.trim( jQuery( 'td:first', builds[ i ] ).text().split( ' (' )[ 0 ] ) + ')) img', html )[ 0 ].src + '" tooltip="' + builds[ i ].getElementsByTagName( 'td' )[ 2 ].innerHTML + '"/>';
 					}
 					
-					table.getElementsByTagName( 'td' )[ 7 ].innerHTML = imgs;
+					table[0].getElementsByTagName( 'td' )[ 7 ].innerHTML = imgs;
 				});
 				
 				// pega as unidades em recrutamento para adicionar na tabela
@@ -102,9 +102,9 @@ TWA.overview = {
 						imgs += '<img src="' + jQuery( '#train_form table tr[class] td:contains(' + data[ 2 ] + ') img', html )[ 0 ].src + '" tooltip="' + data[ 1 ] + '"/>';
 					}
 					
-					table.getElementsByTagName( 'td' )[ 8 ].innerHTML = imgs;
+					table[0].getElementsByTagName( 'td' )[ 8 ].innerHTML = imgs;
 					// adiciona o tooltip ao passar o mouse no icone da unidade
-					jQuery( 'img[tooltip]', table.getElementsByTagName( 'td' )[ 8 ] ).tooltip();
+					jQuery( 'img[tooltip]', table[0].getElementsByTagName( 'td' )[ 8 ] ).tooltip();
 				});
 				
 				// pega as pesquisas em andamento para adicionar na tabela
@@ -116,12 +116,12 @@ TWA.overview = {
 						imgs += '<img src="' + jQuery( '#tech_list img[alt=' + researchs[ i ].getElementsByTagName( 'td' )[ 0 ].innerHTML + ']', html )[ 0 ].src + '" tooltip="' + researchs[ i ].getElementsByTagName( 'td' )[ 2 ].innerHTML + '"/>';
 					}
 					
-					table.getElementsByTagName( 'td' )[ 9 ].innerHTML = imgs;
-					jQuery( 'img[tooltip]', table.getElementsByTagName( 'td' )[ 9 ] ).tooltip();
+					table[0].getElementsByTagName( 'td' )[ 9 ].innerHTML = imgs;
+					jQuery( 'img[tooltip]', table[0].getElementsByTagName( 'td' )[ 9 ] ).tooltip();
 				});
 			}
 
-			jQuery( '.overview_table' ).replaceWith( table );
+			jQuery( '.overview_table' ).replaceWith( table[0] );
 		},
 		combined: function() {
 			Style.add('overview', {

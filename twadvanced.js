@@ -136,14 +136,6 @@ function createString( obj, callback, init, end ) {
 	return init + ( end || '' );
 }
 
-// extrai os elementos apartir de uma string
-function buildFragment( html ) {
-	var elem = document.createElement( 'div' );
-	elem.innerHTML = html;
-	
-	return elem.firstElementChild;
-}
-
 // pega os milesegundos de um tempo formatado
 function formatToTime( _date, _time ) {
 	var data, date;
