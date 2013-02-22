@@ -1,31 +1,14 @@
 TWA.config = function() {
-	// html da lista de linguagens disponiveis no script
-	var langs = '<select style="width:120px" name="lang">';
-	
-	for ( var name in languages ) {
-		langs += '<option value=' + name + '>' + languages[ name ].lang + '</option>'
-	}
-	
-	// html do conteudo da tela de configurações
-	var html = '<div id="twa-tooltip"></div><div class="content">',
-	// lista de configurações para serem ativadas/desativadas
-	settingList = {
-		other: [ 'autofarm', 'lastattack', 'reportfilter', 'villagefilter', 'reportrename', 'commandrename', 'renamevillages', 'mapgenerator', 'reportcalc', 'troopcounter', 'assistentfarm', 'building', 'research', 'changegroups', 'attackplanner', 'selectvillages', 'overview' ],
-		coords: [ 'mapcoords', 'profilecoords', 'mapidentify', 'mapmanual' ],
-		graphicstats: [ 'rankinggraphic', 'allygraphic', 'profilestats' ]
-	};
-	
-	for ( var item in settingList ) {
-		var list = settingList[ item ];
-		
-		html += '<div><h1>' + lang.config[ item ] + '</h1>';
-		
-		for ( var i = 0, name; i < list.length; name = list[ ++i ] ) {
-			html += '<label tooltip="' + lang.config.tooltip[ list[ i ] ] + '"><input type="checkbox" name="' + list[ i ] + '"/> <span>' + lang.config[ list[ i ] ] + '</span></label>';
-		}
-		
-		html += '</div>';
-	}
+	// cria o html com todas opções para serem ativadas/desativadas
+	var html = createString({
+		other: 'autofarm lastattack reportfilter villagefilter reportrename commandrename renamevillages mapgenerator reportcalc troopcounter assistentfarm building research changegroups attackplanner selectvillages overview'.split(' '),
+		coords: 'mapcoords profilecoords mapidentify mapmanual'.split(' '),
+		graphicstats: 'rankinggraphic allygraphic profilestats'.split(' ')
+	}, function( key, items ) {
+		return createString(items, function(i) {
+			return '<label tooltip="' + lang.config.tooltip[ this ] + '"><input type="checkbox" name="' + this + '"/> <span>' + lang.config[ this ] + '</span></label>';
+		}, '<div><h1>' + lang.config[ key ] + '</h1>', '</div>');
+	}, '<div id="twa-tooltip"></div><div class="content">');
 	
 	Style.add('config', {
 		'.config .content div:first-child': { 'margin-left': 0 },
@@ -39,8 +22,23 @@ TWA.config = function() {
 		'.config label span': { 'margin-left': 5 }
 	});
 	
-	Menu.add('config', '</div>' + lang.config.config, html + '<div><h1>Languages</h1><label>Language: ' + langs + '</select></label></div><div class="bottom"><button class="twaButton">' + lang.config.save + '</button></div>', function() {
+	Menu.add('config', '</div>' + lang.config.config, html + '<div><h1>Languages</h1><label>Language: ' + createString( languages, function( name ) { return '<option value=' + name + '>' + this.lang + '</option>' }, '<select style="width:120px" name="lang">' ) + '</select></label></div><div class="bottom"><button class="twaButton">{save}</button></div>'.lang( 'config' ), function() {
 		this.find( 'input[type=checkbox]' ).checkStyle();
+		
+		// adiciona os tooltips de ajuda nas entradas de configuração
+		jQuery( '.config [tooltip]' ).tooltip();
+		
+		// ao clicar no botão "Salvar" as configuração são salvas
+		jQuery( '.config button' ).click(function() {
+			jQuery( '.config input' ).each(function() {
+				TWA.settings[ this.name ] = this.type === 'checkbox' ? jQuery( this ).is( ':checked' ) : this.value;
+			});
+			
+			TWA.settings.lang = jQuery( '[name=lang]' ).val();
+			TWA.storage( true );
+			
+			alert( lang.config.savealert );
+		});
 	});
 	
 	// adiciona os dados das configurações nas entradas de configuração
@@ -49,19 +47,4 @@ TWA.config = function() {
 			document.getElementsByName( name )[ 0 ][ typeof TWA.settings[ name ] === 'boolean' ? 'checked' : 'value' ] = TWA.settings[ name ];
 		}
 	}
-	
-	// adiciona os tooltips de ajuda nas entradas de configuração
-	jQuery( '.config [tooltip]' ).tooltip();
-	
-	// ao clicar no botão "Salvar" as configuração são salvas
-	jQuery( '.config button' ).click(function() {
-		jQuery( '.config input' ).each(function() {
-			TWA.settings[ this.name ] = this.type === 'checkbox' ? jQuery( this ).is( ':checked' ) : this.value;
-		});
-		
-		TWA.settings.lang = jQuery( '[name=lang]' ).val();
-		TWA.storage( true );
-		
-		alert( lang.config.savealert );
-	});
 }

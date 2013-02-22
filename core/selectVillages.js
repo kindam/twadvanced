@@ -36,14 +36,13 @@ TWA.selectVillages = {
 			
 			// cria o checkbox
 			// ao alterar seleciona/deseleciona as aldeias com ataque
-			jQuery( '<input type="checkbox" id="twa-selectvillages-unitsattack"/>' ).change(function() {
-				var i,
-					units,
-					popatt,
-					popdef;
+			jQuery( '<label><input type="checkbox"/> ' + lang.selectvillages.unitsattack + '</label>' ).change(function() {
+				var popatt,
+					popdef,
+					units;
 				
 				// loop em todas aldeias
-				for( i = 0; i < villages.length; i++) {
+				for( var i = 0; i < villages.length; i++) {
 					// pega todas unidades da aldeia
 					units = TWA.selectVillages.tools.getunits( villages[ i ] );
 					// pega a quantidade de tropas de ataque da aldeias
@@ -56,7 +55,7 @@ TWA.selectVillages = {
 					}
 				}
 			// adiciona label ao checkbox e envia elementos para o menu
-			}).add( ' <label for="twa-selectvillages-unitsattack">' + lang.selectvillages.unitsattack + '</label>' ).appendTo( '#twa-selectvillages' );
+			}).appendTo( '#twa-selectvillages' );
 		}],
 		unitsdefence: ['combined', function() {
 			// todas as aldeias da tabela
@@ -64,14 +63,13 @@ TWA.selectVillages = {
 			
 			// cria o checkbox
 			// ao alterar seleciona/deseleciona as aldeias com defesa
-			jQuery( '<input type="checkbox" id="twa-selectvillages-unitsdefence"/>' ).change(function() {
-				var i,
-					units,
-					popatt,
-					popdef;
+			jQuery( '<label><input type="checkbox"/> ' + lang.selectvillages.unitsdefence + '</label>' ).change(function() {
+				var popatt,
+					popdef,
+					units;
 				
 				// loop em todas aldeias
-				for( i = 0; i < villages.length; i++) {
+				for( var i = 0; i < villages.length; i++) {
 					// pega todas unidades da aldeia
 					units = TWA.selectVillages.tools.getunits( villages[ i ] );
 					// pega a quantidade de tropas de ataque da aldeias
@@ -84,7 +82,7 @@ TWA.selectVillages = {
 					}
 				}
 			// adiciona label ao checkbox e envia elementos para o menu
-			}).add( ' <label for="twa-selectvillages-unitsdefence">' + lang.selectvillages.unitsdefence + '</label>' ).appendTo( '#twa-selectvillages' );
+			}).appendTo( '#twa-selectvillages' );
 		}],
 		unitsnob: ['combined', function() {
 			// todas as aldeias da tabela
@@ -92,12 +90,11 @@ TWA.selectVillages = {
 			
 			// cria o checkbox
 			// ao alterar seleciona/deseleciona as aldeias com nobres
-			jQuery( '<input type="checkbox" id="twa-selectvillages-unitsnob">' ).change(function() {
-				var units,
-					i;
+			jQuery( '<label><input type="checkbox" id="twa-selectvillages-unitsnob"> ' + lang.selectvillages.unitsnob + '</label>' ).change(function() {
+				var units;
 				
 				// loop em todas aldeias
-				for ( i = 0; i < villages.length; i++ ) {
+				for ( var i = 0; i < villages.length; i++ ) {
 					// pega todas unidades da aldeia
 					units = TWA.selectVillages.tools.getunits( villages[ i ] );
 					
@@ -107,16 +104,16 @@ TWA.selectVillages = {
 					}
 				}
 			// adiciona label ao checkbox e envia elementos para o menu
-			}).add( ' <label for="twa-selectvillages-unitsnob">' + lang.selectvillages.unitsnob + '</label>' ).appendTo( '#twa-selectvillages' );
+			}).appendTo( '#twa-selectvillages' );
 		}]
 	},
 	tools: {
 		// pega todas tropas da aldeia
 		getunits: function( village ) {
-			var elems = jQuery('.unit-item', village),
+			var elems = jQuery( '.unit-item', village ),
 				units = {};
 			
-			elems = elems.add(elems.next().last());
+			elems = elems.add( elems.next().last() );
 			
 			for ( var i = 0; i < TWA.selectVillages.tools.unitsorder.length; i++ ) {
 				units[ TWA.selectVillages.tools.unitsorder[ i ] ] = Number( elems.eq( i ).text() );

@@ -1,8 +1,6 @@
 TWA.troopCounter = function() {
-	jQuery( '#units_table' ).after( '<table id="twa-troopcounter" class="vis" style="width:100%;margin:0 auto"><thead>' + jQuery( '#units_table thead' ).html() + '</thead><tbody>' + jQuery( '#units_table tbody:first' ).html() + '</tbody></table>' );
-	
 	var units = {},
-		table = document.getElementById( 'twa-troopcounter' ),
+		table = jQuery( '<table id="twa-troopcounter" class="vis" style="width:100%;margin:0 auto"><thead>' + jQuery( '#units_table thead' ).html() + '</thead><tbody>' + jQuery( '#units_table tbody:first' ).html() + '</tbody></table>' ).insertAfter( '#units_table' ),
 		img = document.getElementById( 'units_table' ).getElementsByTagName( 'tr' )[ 0 ].getElementsByTagName( 'img' ),
 		tbody = document.getElementById( 'units_table' ).getElementsByTagName( 'tbody' ),
 		mytr = table.getElementsByTagName( 'tbody' )[ 0 ].getElementsByTagName( 'tr' );

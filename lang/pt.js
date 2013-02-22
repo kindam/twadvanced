@@ -182,7 +182,8 @@ languages.pt = {
 		errorcoords: 'A coordenada {0} não existe.',
 		success: '<td>{1}</td><td>{2}</td> com as seguintes tropas: {3}',
 		current: 'Atual',
-		now: 'Agora'
+		now: 'Agora',
+		allunits: 'Enviar todas tropas'
 	},
 	overview: {
 		warning: '* A visualização avançada é melhor visualizada com a largura da janela acima de 1000px. (Configurações -> Configurações)',

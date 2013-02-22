@@ -19,16 +19,15 @@ TWA.reportCalc = function() {
 			unitsAttack = '',
 			colspan = 0;
 		
-		for ( var name in TWA.data.units ) {
+		createString(TWA.data.units, function( name ) {
 			if ( !remove[ name ] ) {
 				colspan++;
 				inputs += '<td><img src="http://cdn.tribalwars.net/graphic/unit/unit_' + name + '.png"/> <input type="checkbox" class="twaUnits" unit="' + name + '" ' + ( options.actives.indexOf( name ) >= 0 ? 'checked="true"' : '' ) + '/></td>';
 				unitsAttack += '<td name="' + name + '"></td>';
 			}
-		}
+		});
 		
-		jQuery( 'table[width=470]' ).before( ( '<div id="twaReportCalc"><table class="twa-table"><tr><th colspan="__colspan">' + lang.reportcalc.unitscalc + '</th></tr><tr><td style="text-align:left" colspan="__colspan"><label><input type="checkbox" id="twa-currentVillage"> ' + lang.reportcalc.currentvillage + '</label></td></tr><tr><td style="text-align:left" colspan="__colspan"><label><input class="twaInput" id="twa-spy" value="' + this.settings._reportcalc.spy + '"/> ' + lang.reportcalc.sendSpy + '.</label></td></tr><tr><td style="text-align:left" colspan="__colspan"><label><input class="twaInput" id="twa-ram" value="' + this.settings._reportcalc.ram + '"/> ' + lang.reportcalc.sendRam + '.</label></td></tr><tr>__inputs</tr><tr id="twa-results">__unitsAttack</tr></table><div style="margin:5px"><a href="#" id="twa-attack">» ' + lang.reportcalc.attack + '</a></div></div>' ).replace( '__inputs', inputs ).replace( '__unitsAttack', unitsAttack ).replace( /__colspan/g, colspan ) );
-		
+		jQuery( ( '<div id="twaReportCalc"><table class="twa-table"><tr><th colspan="__colspan">{unitscalc}</th></tr><tr><td style="text-align:left" colspan="__colspan"><label><input type="checkbox" id="twa-currentVillage"> {currentvillage}</label></td></tr><tr><td style="text-align:left" colspan="__colspan"><label><input class="twaInput" id="twa-spy" value="' + this.settings._reportcalc.spy + '"/> {sendSpy}.</label></td></tr><tr><td style="text-align:left" colspan="__colspan"><label><input class="twaInput" id="twa-ram" value="' + this.settings._reportcalc.ram + '"/> {sendRam}.</label></td></tr><tr>__inputs</tr><tr id="twa-results">__unitsAttack</tr></table><div style="margin:5px"><a href="#" id="twa-attack">» {attack}</a></div></div>' ).replace( '__inputs', inputs ).replace( '__unitsAttack', unitsAttack ).replace( /__colspan/g, colspan ).lang( 'reportcalc' ) ).insertBefore( 'table[width=470]' );
 		attackButton = jQuery( '#twa-attack' );
 		
 		// ao alterar as opções executa a função novamente com os novos paramentros

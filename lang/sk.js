@@ -182,7 +182,8 @@ languages.sk = {
 		errorcoords: 'Cie¾ {0} neexistuje!',
 		success: '{0} Poslané z dedine {1} do dediny {2} s nasledujucími vojakmi {3}',
 		current: 'Prúd',
-		now: 'Teraz'
+		now: 'Teraz',
+		allunits: 'Poslať všetky jednotky'
 	},
 	overview: {
 		warning: '* Pokroèilá vizualizácia je optimalizovaná pre šírku okna nad 1000px. (Nastavenia -> Nastavenia)',

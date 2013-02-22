@@ -2,8 +2,8 @@ TWA.profileCoords = function() {
 	var // lista de aldeias
 		tr = document.getElementById( 'villages_list' ).getElementsByTagName( 'tr' ),
 		coords = [],
-		points,
-		timeout;
+		timeout,
+		points;
 	
 	// faz o loop em todas aldeias
 	for ( var i = 1; i < tr.length - 1; i++ ) {
@@ -18,18 +18,13 @@ TWA.profileCoords = function() {
 	}
 	
 	// adiciona opções e caixa de coordenadas
-	jQuery( '#villages_list' ).before( '<table class="vis" id="twa-profilecoords" width="100%"><tr><th>' + lang.profilecoords.everycoords + '</th></tr><tr><td><textarea style="width:100%;background:none;border:none;resize:none;font-size:11px">' + coords.join(' ') + '</textarea></td></tr><tr><td><label><input style="width:40px" name="_profilecoordsmin"/> ' + lang.profilecoords.min + '</label><br/><label><input style="width:40px" name="_profilecoordsmax"/> ' + lang.profilecoords.max + '</label></td></tr></table><br/>' );
-	
-	// faz o loop nas opções adicionando os valores de configuração atual
-	jQuery( '#twa-profilecoords input ').each(function() {
+	jQuery( '<table class="vis" id="twa-profilecoords" width="100%"><tr><th>{everycoords}</th></tr><tr><td><textarea style="width:100%;background:none;border:none;resize:none;font-size:11px">' + coords.join(' ') + '</textarea></td></tr><tr><td><label><input style="width:40px" name="_profilecoordsmin"/> {min}</label><br/><label><input style="width:40px" name="_profilecoordsmax"/> {max}</label></td></tr></table><br/>'.lang( 'profilecoords' ) ).insertBefore( '#villages_list' ).find( 'input' ).each(function() {
 		this.value = TWA.settings[ this.name ];
-	
 	// ao alterar os valores as configurações são salvas
 	}).change(function() {
 		var elem = this;
 		
 		clearTimeout( timeout );
-		
 		timeout = setTimeout(function () {
 			TWA.settings[ elem.name ] = Number( elem.value );
 			TWA.storage( true );

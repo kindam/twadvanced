@@ -182,7 +182,8 @@ languages.en = {
 		errorcoords: 'Coords {0} doesn\'t exist.',
 		success: '{0} send on village {1} to village {2} with the troops: {3}',
 		current: 'Current',
-		now: 'Now'
+		now: 'Now',
+		allunits: 'Send all units'
 	},
 	overview: {
 		warning: '* The advanced visualization is best viewed with the window width above 1000px. (Settings -> Settings)',

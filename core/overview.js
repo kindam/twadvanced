@@ -1,11 +1,9 @@
 TWA.overview = {
 	init: function() {
-		$overviewTools.show().append( '<tr><td>' + lang.overview.changemode + ' <select id="twa-overview-modes"></select> (' + lang.overview.needreload + ')</td></tr>' );
-		
-		var modes = document.getElementById( 'twa-overview-modes' );
+		$overviewTools.show().append( '<tr><td>{changemode} <select id="twa-modes"></select> ({needreload})</td></tr>'.lang( 'overview' ) );
 		
 		// ao alterar o modo de visualização salva para a proxima utilização
-		modes.onchange = function() {
+		jQuery( '#twa-modes' ).change(function() {
 			TWA.settings._overviewmode = this.value;
 			TWA.storage( true );
 			
@@ -16,11 +14,9 @@ TWA.overview = {
 					TWA.renamevillages.mode = TWA.renamevillages.modes.nopremium[ TWA.settings.overview ? TWA.settings._overviewmode : 'nooverview' ];
 				}
 			}
-		};
-		
-		for ( var mode in TWA.overview.modes ) {
-			modes.innerHTML += '<option value="' + mode + '"' + ( TWA.settings._overviewmode === mode ? ' selected="selected"' : '' ) + '>' + lang.overview[ mode ] + '</option>';
-		}
+		}).append(createString(TWA.overview.modes, function( mode ) {
+			return '<option value="' + mode + '"' + ( TWA.settings._overviewmode === mode ? ' selected="selected"' : '' ) + '>' + lang.overview[ mode ] + '</option>';
+		}));
 		
 		// caso o tamanho da pagina do jogo seja pequena é enviado
 		// um aviso que é melhor visualizado maior que 1000px
@@ -33,18 +29,18 @@ TWA.overview = {
 	},
 	modes: {
 		production: function() {
-			var table = jQuery( '<table id="production_table" class="vis overview_table" width="100%"><thead><tr><th width="400px">' + lang.overview.village + '</th><th style="width:50px;text-align:center">' + lang.overview.wood + '</th><th style="width:50px;text-align:center">' + lang.overview.stone + '</th><th style="width:50px;text-align:center">' + lang.overview.stone + '</th><th style="width:46px;text-align:center"><span class="icon header ressources"></span></th><th style="width:53px;text-align:center"><img src="http://cdn2.tribalwars.net/graphic/overview/trader.png"/></th><th>' + lang.overview.buildings + '</th><th>' + lang.overview.research + '</th><th>' + lang.overview.recruit + '</th></tr></thead></table>' ),
+			var table = jQuery( '<table id="production_table" class="vis overview_table" width="100%"><thead><tr><th width="400px">{village}</th><th style="width:50px;text-align:center">{wood}</th><th style="width:50px;text-align:center">{stone}</th><th style="width:50px;text-align:center">{stone}</th><th style="width:46px;text-align:center"><span class="icon header ressources"></span></th><th style="width:53px;text-align:center"><img src="http://cdn2.tribalwars.net/graphic/overview/trader.png"/></th><th>{buildings}</th><th>{research}</th><th>{recruit}</th></tr></thead></table>'.lang( 'overview' ) ),
 				elems = jQuery( '.overview_table tr[class]' ).get(),
-				vid,
-				village,
-				points,
-				storage,
-				resource,
-				resourceHtml,
 				resourceNames,
-				farm,
+				resourceHtml,
+				resource,
+				village,
+				storage,
 				amount,
-				span;
+				points,
+				farm,
+				span
+				vid;
 			
 			for ( var i = 0; i < elems.length; i++ ) {
 				// id da aldeia
@@ -134,10 +130,10 @@ TWA.overview = {
 			
 			var table = jQuery( '<table id="combined_table" class="vis overview_table" width="100%"><thead>' + trs + '<th><img src="http://cdn2.tribalwars.net/graphic/overview/trader.png"/></th></tr></thead></table>' ),
 				elems = jQuery( '.overview_table tr[class]' ).get(),
-				tds,
-				vid,
 				village,
-				unit;
+				unit,
+				tds,
+				vid;
 			
 			// função para obter as informações de recrutamento, construções e pesquisas
 			function insert( expr, html, elem ) {
@@ -171,13 +167,10 @@ TWA.overview = {
 			for ( var i = 0; i < elems.length; i++ ) {
 				// clona o elemento com nome e entrada para renomear
 				village = elems[ i ].getElementsByTagName( 'td' )[ 0 ].cloneNode( true );
-				
 				// id da aldeia
 				vid = village.getElementsByTagName( 'a' )[ 0 ].href.match( /village=(\d+)/ )[ 1 ];
-				
 				// novo HTML da aldeia na tabela
 				table[ 0 ].innerHTML += '<tr class="' + elems[ i ].className + ' twa-overview-' + vid + '">' + createString( TWA.data.units, function( unit ) { return '<td class="unit-item ' + unit + '"></td>' }, '<td style="line-height:10px;white-space:nowrap">' + village.innerHTML + '<span style="text-align:right;font-size:9px;display:block;float:right;margin-left:30px">' + elems[ i ].getElementsByTagName( 'td' )[ 1 ].innerHTML + ' ' + lang.overview.points + '</span></td><td class="main"></td><td class="barracks"></td><td class="stable"></td><td class="garage"></td><td class="smith"></td><td><a href="' + Url( 'farm', vid ) + '">' + elems[ i ].getElementsByTagName( 'td' )[ 4 ].innerHTML + '</a></td>' ) + '<td class="market"></td></tr>';
-				
 				// todos os elementos TD da aldeia na tabela
 				tds = table[ 0 ].getElementsByTagName( 'tr' )[ elems.length ].getElementsByTagName( 'td' );
 				
@@ -188,11 +181,11 @@ TWA.overview = {
 				
 				jQuery.get(Url( 'train' ), function( html ) {
 					// obtem a quantidade de tropas na aldeia
-					var troops = {},
-						troopsElem = jQuery( '#train_form tr[class]', html ).get(),
-						unit,
+					var troopsElem = jQuery( '#train_form tr[class]', html ).get(),
+						troops = {},
+						unitIndex = 8,
 						unitElem,
-						unitIndex = 8;
+						unit;
 					
 					for ( var i = 0; i < troopsElem.length; i++ ) {
 						// nome da unidade

@@ -6,7 +6,7 @@ TWA.rename = {
 			elem = elem.parent();
 		}
 		
-		elem.before( '<table class="vis" width="100%"><tr><th>' + lang.rename.rename + ' ' + type + ': <input type="text" id="twa-' + id + '" style="padding:1px 2px;border:1px solid red;border-radius:2px;border-radius:2px;height:15px"/> <input type="button" value="' + lang.rename.rename + '"/><label><input type="checkbox" id="twa-onlyselected"/> ' + lang.rename.only + ' ' + type + ' ' + lang.rename.selected + '</label> <img src="http://www.preloaders.net/preloaders/252/preview.gif" style="width:25px;display:none" id="twa-loader"/></th></tr></table>' );
+		elem.before( '<table class="vis" width="100%"><tr><th>{rename} ' + type + ': <input type="text" id="twa-' + id + '" style="padding:1px 2px;border:1px solid red;border-radius:2px;border-radius:2px;height:15px"/> <input type="button" value="{rename}"/><label><input type="checkbox" id="twa-onlyselected"/> {only} ' + type + ' {selected}</label> <img src="http://www.preloaders.net/preloaders/252/preview.gif" style="width:25px;display:none" id="twa-loader"/></th></tr></table>'.lang( 'rename' ) );
 	},
 	reports: function() {
 		TWA.rename.init( '#report_list', lang.rename.report, 'reportrename' );

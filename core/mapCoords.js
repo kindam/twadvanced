@@ -1,19 +1,17 @@
 TWA.mapCoords = {
 	init: function() {
 		// opções e caixa de coordenadas
-		jQuery( '#map_whole' ).after('<br/><table class="vis" width="100%" id="twa-getcoords"><tr><th>' + lang.mapcoords.getcoords + ' <a href="#" id="twa-mapcoords-refresh">» ' + lang.mapcoords.update + '</a></th></tr><tr><td style="text-align:center"><textarea style="width:100%;background:none;border:none;resize:none;font-size:11px"></textarea></td></tr><tr><td id="twa-getcoords-options"><label><input type="checkbox" name="_mapplayers"> ' + lang.mapcoords.mapplayers + '</label> ' + lang.mapcoords.min + ': <input name="_mapplayersmin" style="width:35px"> ' + lang.mapcoords.max + ': <input name="_mapplayersmax" style="width:35px"><br/><label><input name="_mapabandoneds" type="checkbox"> ' + lang.mapcoords.mapabandoneds + '</label> ' + lang.mapcoords.min + ': <input name="_mapabandonedsmin" style="width:35px"> ' + lang.mapcoords.max + ': <input name="_mapabandonedsmax" style="width:35px"></td></tr></table>' );
-		
-		var timeout;
+		var html = jQuery( '<br/><table class="vis" width="100%" id="twa-getcoords"><tr><th>{getcoords} <a href="#" class="refresh">» {update}</a></th></tr><tr><td style="text-align:center"><textarea style="width:100%;background:none;border:none;resize:none;font-size:11px"></textarea></td></tr><tr><td class="options"><label><input type="checkbox" name="_mapplayers"> {mapplayers}</label> {min}: <input name="_mapplayersmin" style="width:35px"> {max}: <input name="_mapplayersmax" style="width:35px"><br/><label><input name="_mapabandoneds" type="checkbox"> {mapabandoneds}</label> {min}: <input name="_mapabandonedsmin" style="width:35px"> {max}: <input name="_mapabandonedsmax" style="width:35px"></td></tr></table>'.lang( 'mapcoords' ) ).insertAfter( '#map_whole' ),
+			timeout;
 		
 		// faz o loop das entradas de configurações
-		jQuery( '#twa-getcoords-options input' ).each(function() {
+		html.find( '.options input' ).each(function() {
 			this[ this.type === 'checkbox' ? 'checked' : 'value' ] = TWA.settings[ this.name ];
 		// ao alterar os valores as opções são salvas
 		}).change(function() {
 			var elem = this;
 			
 			clearTimeout( timeout );
-			
 			timeout = setTimeout(function() {
 				var value = elem[ elem.type === 'checkbox' ? 'checked' : 'value' ];
 				
@@ -22,9 +20,9 @@ TWA.mapCoords = {
 			}, 1000);
 		});
 		
-		document.getElementById( 'twa-mapcoords-refresh' ).onclick = function() {
+		html.find( '.refresh' ).click(function() {
 			return TWA.mapCoords.get();
-		};
+		});
 		
 		TWA.mapCoords.get();
 	},

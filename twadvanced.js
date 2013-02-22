@@ -58,6 +58,26 @@ String.prototype.springf = function() {
 	});
 };
 
+String.prototype.lang = function( name ) {
+	var args = arguments;
+	
+	return String( this ).replace(/\{([^}]+)\}/g, function( _, prop ) {
+		if ( !lang[ name ] ) {
+			return lang.lang;
+		} else if ( !lang[ name ][ prop ] ) {
+			for ( var i = 2; i < args.length; i++ ) {
+				if ( lang[ args[ i ] ][ prop ] ) {
+					return lang[ args[ i ] ][ prop ];
+				}
+			}
+			
+			return 'LangError';
+		}
+		
+		return lang[ name ][ prop ];
+	});
+};
+
 // permite apenas numeros, barras, espaços
 jQuery.fn.onlyNumbers = function( type ) {
 	return this.keydown(function( e ) {
@@ -88,18 +108,19 @@ jQuery.fn.tooltip = jQuery.tooltip = function( elems ) {
 
 // jQuery( checkbox ).checkStyle()
 // adiciona estilos nos checkbox.
-jQuery.fn.checkStyle = function() {
+jQuery.fn.checkStyle = function( events, handlers ) {
 	this.hide().each(function() {
-		var checked,
-		input = jQuery( this ),
-		elem = jQuery( '<a class="checkStyle"></a>' ).click(function() {
-			elem = jQuery( this );
-			var checked = elem.hasClass( 'checked' );
-			elem[ elem.hasClass( 'checked' ) ? 'removeClass' : 'addClass' ]( 'checked' );
-			input.attr( 'checked', !checked );
-			
-			return false;
-		}).insertAfter( this );
+		var self = this,
+			checked,
+			input = jQuery( this ),
+			elem = jQuery( '<a class="checkStyle"></a>' ).click(function() {
+				elem = jQuery( this );
+				var checked = elem.hasClass( 'checked' );
+				elem[ elem.hasClass( 'checked' ) ? 'removeClass' : 'addClass' ]( 'checked' );
+				input.attr( 'checked', !checked );
+				
+				return false;
+			}).bind( events, handlers ).addClass( this.className ).insertAfter( this );
 		
 		if ( input.is( ':checked' ) ) {
 			elem.addClass( 'checked' );
@@ -385,7 +406,7 @@ var Menu = (function() {
 		var pass = false;
 		props = props.split( ' ' );
 		
-		if ( event.keyCode == 46 || event.keyCode == 8 || event.keyCode == 9 || event.keyCode == 27 || event.keyCode == 13 || (event.keyCode == 65 && event.ctrlKey === true) || (event.keyCode >= 35 && event.keyCode <= 39) || ((event.keyCode === 67 || event.keyCode === 86 || event.keyCode === 88) && event.ctrlKey)) {
+		if ( event.keyCode == 40 || event.keyCode == 46 || event.keyCode == 8 || event.keyCode == 9 || event.keyCode == 27 || event.keyCode == 13 || (event.keyCode == 65 && event.ctrlKey === true) || (event.keyCode >= 35 && event.keyCode <= 39) || ((event.keyCode === 67 || event.keyCode === 86 || event.keyCode === 88) && event.ctrlKey)) {
 			return true;
 		}
 		
@@ -401,9 +422,9 @@ var Menu = (function() {
 	jQuery.fn.acceptOnly = function( props, callback ) {
 		return this.keydown(function( event ) {
 			var prop = parse( props, event );
+			
 			if ( prop ) {
-				callback.call( this, event, prop );
-				return true;
+				return callback.call( this, event, prop );
 			} else {
 				return event.preventDefault();
 			}
@@ -416,10 +437,11 @@ Style.add('twa', {
 	'#twa-menuOpen': { margin: '0px 6px 0px 2px', 'border-radius': 4, padding: '0px 3px 2px 3px', 'font-family': 'courier new', border: '1px solid rgba(0,0,0,0.25)', background: '-special-linear-gradient(bottom, #e7e7e7 100%, #c5c5c5 0%)', cursor: 'pointer' },
 	'#twa-tooltip': { position: 'absolute', display: 'none', 'z-index': '999999', background: 'rgba(0,0,0,.8)', width: 300, color: '#ccc', padding: 4, 'border-radius': 2, 'box-shadow': '1px 1px 3px #333' },
 	'.twaInput': { background: '#F3F3F3', 'border-radius': 6, 'box-shadow': '0 1px 4px rgba(0,0,0,0.2) inset', 'font-family': 'courier new', border: '1px solid #bbb', color: '#555' },
+	'.twaInput:disabled': { background: '#ddd', color: '#aaa' },
 	'.twaButton': { 'border-radius': 3, margin: 10, padding: '7px 20px', background: '-special-linear-gradient(bottom, #CCC 0%, white 100%)', border: '1px solid #AAA', 'font-weight': 'bold' },
 	'.checkStyle': { display: 'block', 'float': 'left', background: 'url(http://i.imgur.com/MhppaVe.png) top left no-repeat', 'background-position': '-4px -5px', width: 21, height: 20 },
 	'.checkStyle.checked': { 'background-position': '-4px -65px' },
-	'.checkStyle.center': { margin: '0 auto' },
+	'.checkStyle.center': { margin: '0 auto', float: 'none!important' },
 	// table
 	'.twa-table': { width: '100%' },
 	'.twa-table th': { 'text-align': 'center', background: '-special-linear-gradient(bottom, #BBB 30%, #CCC 100%) !important', padding: '7px !important' },

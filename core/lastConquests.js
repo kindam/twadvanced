@@ -29,7 +29,7 @@
 				'.lastConquests .time': { 'text-align': 'center', padding: '3px 10px', width: 13 }
 			});
 			
-			Menu.add('lastConquests', lang.lastConquests.lastConquests, '<p>' + lang.lastConquests.loadLast + ' <input type="text" class="time twaInput" value="1"/> ' + lang.lastConquests.hours + '. (max 24h)</p><table><thead><tr><th>' + lang.lastConquests.village + '</th><th style="width:150px">' + lang.lastConquests.date + '</th><th>' + lang.lastConquests.newOwn + '</th><th>' + lang.lastConquests.oldOwn + '</th></tr></thead><tbody></tbody></table><table><tr><td><a href="#" id="twaPageUp" style="display:none">' + lang.lastConquests.pageUp + '</a></td><td><a href="#" id="twaPageDown">' + lang.lastConquests.pageDown + '</a></td></tr></table>', function() {
+			Menu.add('lastConquests', lang.lastConquests.lastConquests, '<p>{loadLast} <input type="text" class="time twaInput" value="1"/> {hours}. (max 24h)</p><table><thead><tr><th>{village}</th><th style="width:150px">{date}</th><th>{newOwn}</th><th>{oldOwn}</th></tr></thead><tbody></tbody></table><table><tr><td><a href="#" id="twaPageUp" style="display:none">{pageUp}</a></td><td><a href="#" id="twaPageDown">{pageDown}</a></td></tr></table>'.lang( 'lastConquests' ), function() {
 				var table = this.find( 'tbody:first' ).empty();
 				pageUp = jQuery( '#twaPageUp' ),
 				pageDown = jQuery( '#twaPageDown' );

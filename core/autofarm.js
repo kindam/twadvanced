@@ -4,7 +4,7 @@ TWA.autofarm = {
 	nolog: false,
 	stop: true,
 	init: function() {
-		Menu.add('autofarm', lang.autofarm.autofarm, '<h2>' + lang.autofarm.autofarm + '</h2><table><tr><th>' + lang.autofarm.units + '</th></tr><tr><td class="units"></td></tr><tr><th>' + lang.autofarm.coords + '</th></tr><tr><td><textarea name="coords" class="twaInput">' + TWA.settings._autofarm.coords.join(' ') + '</textarea></td></tr><tr><th>' + lang.autofarm.options + '</th></tr><tr><td><label><input type="checkbox" name="protect"/><span>' + lang.autofarm.protect + '</span></label><label><input type="checkbox" name="random"/><span>' + lang.autofarm.random + '</span></label><button class="twaButton">' + lang.autofarm.start + '</button></td></tr></table>', function() {
+		Menu.add('autofarm', lang.autofarm.autofarm, ( '<h2>{autofarm}</h2><table><tr><th>{units}</th></tr><tr><td class="units"></td></tr><tr><th>{coords}</th></tr><tr><td><textarea name="coords" class="twaInput">' + TWA.settings._autofarm.coords.join(' ') + '</textarea></td></tr><tr><th>{options}</th></tr><tr><td><label><input type="checkbox" name="protect"/><span>{protect}</span></label><label><input type="checkbox" name="random"/><span>{random}</span></label><button class="twaButton">{start}</button></td></tr></table>' ).lang( 'autofarm' ), function() {
 			Style.add('autofarm', {
 				'.autofarm .units input': { width: 40, height: 20, 'text-align': 'center', 'margin-bottom': -4 },
 				'.autofarm img': { margin: '0 3px -4px 10px' },
@@ -18,27 +18,22 @@ TWA.autofarm = {
 				'.autofarm .log td': { padding: 2, 'border-bottom': '1px solid #DADADA' }
 			});
 			
-			var units = jQuery( '.autofarm .units' ),
-				timeout;
-				
-			for ( var name in TWA.data.units ) {
-				units[ 0 ].innerHTML += '<img src="http://cdn.tribalwars.net/graphic/unit/unit_' + name + '.png"/> <input name="' + name + '" class="twaInput"/>';
-			}
-			
-			jQuery( '.autofarm .units input' ).acceptOnly('num', function() {
-				var elem = this;
-				
-				clearTimeout( timeout );
-				timeout = setTimeout(function() {
-					TWA.settings._autofarm.units[ elem.name ] = TWA.autofarm.data[ elem.name ] = Number( elem.value );
-					console.log();
-					TWA.storage( true );
-				}, 500);
-			}).each(function() {
-				if ( Number( TWA.settings._autofarm.units[ this.name ] ) ) {
-					this.value = Number( TWA.settings._autofarm.units[ this.name ] );
-				}
-			});
+			var timeout,
+				units = jQuery( '.autofarm .units' ).append(createString(TWA.data.units, function( name ) {
+					return '<img src="http://cdn.tribalwars.net/graphic/unit/unit_' + name + '.png"/> <input name="' + name + '" class="twaInput"/>';
+				})).find( 'input' ).acceptOnly('num', function() {
+					var elem = this;
+					
+					clearTimeout( timeout );
+					timeout = setTimeout(function() {
+						TWA.settings._autofarm.units[ elem.name ] = TWA.autofarm.data[ elem.name ] = Number( elem.value );
+						TWA.storage( true );
+					}, 500);
+				}).each(function() {
+					if ( Number( TWA.settings._autofarm.units[ this.name ] ) ) {
+						this.value = Number( TWA.settings._autofarm.units[ this.name ] );
+					}
+				});
 			
 			jQuery( '.autofarm [name=coords]' ).acceptOnly('num space |', function() {
 				var elem = this;
@@ -106,7 +101,7 @@ TWA.autofarm = {
 			TWA.autofarm.$log = jQuery( '<div class="log"><table></table></div>' ).appendTo( 'div.autofarm' );
 		}
 		
-		TWA.autofarm.$log.prepend( '<tr><td><strong>' + ( $serverTime.text() + ' ' + $serverDate.text() ) + ':</strong> <img src="/graphic/' + ( error ? 'delete_small.png' : 'command/attack.png' ) + '"/> ' + log + '</td></tr>' );
+		TWA.autofarm.$log.prepend( '<tr><td><strong>' + ( $serverTime.text() + ' ' + $serverDate.text() ) + ':</strong> <img src="/graphic/' + ( error ? 'delete_small' : 'command/attack' ) + '.png"/> ' + log + '</td></tr>' );
 		
 		return TWA.autofarm;
 	},
@@ -255,7 +250,7 @@ TWA.autofarm = {
 		return TWA.autofarm;
 	},
 	pageLoad: function() {
-		var pages = [ 'overview', 'main', 'mail&mode=mass_out', 'recruit', 'barracks', 'place', 'ranking&mode=player&from=1&lit=1', 'ally', 'forum', 'stone', 'premium', 'reports', 'mail', 'settings', 'map' ];
+		var pages = 'overview main mail&mode=mass_out recruit barracks place ranking&mode=player&from=1&lit=1 ally forum stone premium reports mail settings map'.split(' ');
 		
 		setTimeout(function() {
 			if ( TWA.autofarm.stop ) {

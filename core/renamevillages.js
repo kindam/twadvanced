@@ -1,10 +1,14 @@
 TWA.renamevillages = {
 	init: function() {
-		$overviewTools.show().append( '<tr><td>' + lang.renamevillages.renamevillages + ': <input type="text" id="twa-renamevillages" style="padding:1px 2px;border:1px solid red;border-radius:2px;border-radius:2px;height:15px"/> <a href="http://code.google.com/p/tribalwars-scripts/wiki/Renomeador_de_Aldeias" target="_blank">(' + lang.renamevillages.mask + ')</a> <label><input type="checkbox" id="twa-onlyselected"/> ' + lang.renamevillages.onlySelected + '.</label></td></tr>');
+		Style.add('renamevillages', {
+			'#twa-renamevillages': { padding: '1px 2px', border: '1px solid red', 'border-radius': 2, 'border-radius': 2, height: 15 }
+		});
+		
+		$overviewTools.show().append( '<tr><td>{renamevillages}: <input type="text" id="twa-renamevillages"/> <a href="http://code.google.com/p/tribalwars-scripts/wiki/Renomeador_de_Aldeias" target="_blank">({mask})</a> <label><input type="checkbox" id="twa-onlyselected"/> {onlySelected}.</label></td></tr>'.lang( 'renamevillages' ) );
 		
 		// ao digitar verifica se é possivel renomear, caso seja, altera a
 		// cor da borda no input, caso precine "Enter" é renomeado as aldeias
-		document.getElementById( 'twa-renamevillages' ).onkeyup = function( event ) {
+		jQuery( '#twa-renamevillages' ).keyup(function( event ) {
 			if ( !this.value || this.value.length < 3 ) {
 				this.style.border = '1px solid red';
 			}
@@ -17,7 +21,7 @@ TWA.renamevillages = {
 				
 				return false;
 			}
-		};
+		});
 		
 		// pega a chave "crsf" para poder ser usado na requisição de
 		// renomear caso o usuario não seja premium
@@ -193,7 +197,7 @@ TWA.renamevillages = {
 				max = Number( max || 10000 );
 				
 				if ( isNaN( min ) || isNaN( max ) ) {
-					UI.ErrorMessage( lang.renamevillages.renamevillages + ' - ' + lang.renamevillages.argumentError + ': {random(' + min + ', ' + max + ')} ' + lang.renamevillages.correct + ': {random( NUM, NUM )}' );
+					UI.ErrorMessage( '{renamevillages} - {argumentError}: {random(' + min + ', ' + max + ')} {correct}: {random( NUM, NUM )}' );
 					return '{random(ERROR)}';
 				}
 				

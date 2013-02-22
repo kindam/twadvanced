@@ -1,8 +1,6 @@
 TWA.research = {
 	init: function() {
-		jQuery( '.overview_table' ).before( '<table class="vis" width="100%" id="twa-research"><tr><th>' + lang.research.help + ' <a href="#" id="twa-research-cancel">» ' + lang.research.cancel + '</a></th></tr></table>' );
-		
-		jQuery( '#twa-research-cancel' ).click(function() {
+		jQuery( '<table class="vis" width="100%"><tr><th>{help} <a href="#" class="cancel">» {cancel}</a></th></tr></table>'.lang( 'research' ) ).insertBefore( '.overview_table' ).find( '.cancel' ).click(function() {
 			if ( confirm( lang.research.confirmcancel ) ) {
 				TWA.research.cancel();
 			}

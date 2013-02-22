@@ -9,7 +9,7 @@ TWA.lastAttack = function() {
 	jQuery( '.twa-lastattack' ).remove();
 	
 	// loop em todas aldeias do mapa
-	TWA.mapVillages(function() {
+	return TWA.mapVillages(function() {
 		jQuery.ajax({
 			url: 'game.php?village=' + this.id + '&screen=overview&json=1&source=873',
 			dataType: 'json',
@@ -71,6 +71,4 @@ TWA.lastAttack = function() {
 			}
 		});
 	});
-	
-	return true;
 };

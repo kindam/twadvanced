@@ -9,8 +9,7 @@ TWA.mapElement = function( data, css ) {
 			left: Number( img.css( 'left' ).replace( 'px', '' ) ) + pos[ 1 ],
 			zIndex: 10,
 			position: 'absolute',
-			'-moz-border-radius': css.borderRadius,
-			'-webkit-border-radius': css.borderRadius
+			'border-radius': css.borderRadius
 		})).addClass( data.Class );
 	
 	data.id && elem.attr( 'id', data.id );

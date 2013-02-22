@@ -12,13 +12,15 @@ TWA.villageFilter = function() {
 	
 	var villages = jQuery( villagesExpr ).get();
 	
-	jQuery( '#twa-overviewtools' ).show().append( '<tr><td>' + lang.villagefilter.search + ' <input type="text" id="twa-villagefilter" style="padding:1px 2px;border:1px solid silver;border-radius:2px;height:15px"/></td></tr>' );
+	Style.add('villagefilter', {
+		'#twa-villagefilter': { padding: '1px 2px', border: '1px solid silver', 'border-radius': 2, height: 15 }
+	});
 	
+	jQuery( '#twa-overviewtools' ).show().append( '<tr><td>' + lang.villagefilter.search + ' <input type="text" id="twa-villagefilter"/></td></tr>' );
 	jQuery( '#twa-villagefilter' ).keyup(function () {
 		var param = this.value.toLowerCase();
 		
 		clearTimeout( timeout );
-		
 		timeout = setTimeout(function() {
 			for ( var i = 0; i < villages.length; i++ ) {
 				villages[ i ].style.display = villages[ i ].getElementsByTagName( 'span' )[ 1 ].innerHTML.toLowerCase().indexOf( param ) < 0 ? 'none' : '';
