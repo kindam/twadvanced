@@ -18,7 +18,8 @@ overview = ( document.getElementById( 'overview' ) || { value: 'production' }).v
 $tooltip = jQuery( '<div id="twa-tooltip"/>' ).appendTo( 'body' ),
 // tabela com as funções utilizadas na visualização de aldeias
 $overviewTools;
-window.TWA = { version: '1.6.2' };
+
+TWA = { version: '1.6.2' };
 
 // LOAD METHODS HERE
 
@@ -109,7 +110,7 @@ jQuery.fn.tooltip = jQuery.tooltip = function( elems ) {
 // jQuery( checkbox ).checkStyle()
 // adiciona estilos nos checkbox.
 jQuery.fn.checkStyle = function( events, handlers ) {
-	this.hide().each(function() {
+	return this.hide().each(function() {
 		var self = this,
 			checked,
 			input = jQuery( this ),
@@ -133,6 +134,64 @@ jQuery.fn.checkStyle = function( events, handlers ) {
 		}
 	});
 };
+
+// adiciona .keydown aos elementos e permite apenas as keys selecionadas
+jQuery.fn.acceptOnly = jQuery.acceptOnly = (function() {
+	var codes = {
+		num: function(e) { return e.keyCode > 47 && e.keyCode < 58; },
+		space: function(e) { return e.keyCode === 32 },
+		enter: function(e) { return e.keyCode === 13 },
+		tab: function(e) { return e.keyCode === 9 },
+		'|': function(e) { return e.keyCode === 226 && e.shiftKey },
+		':': function(e) { return e.keyCode === 191 && e.shiftKey },
+		'/': function(e) { return ( e.keyCode === 193 || e.keyCode === 81 ) && e.altKey && !e.shiftKey }
+	};
+	
+	function parse( props, event ) {
+		var pass = false;
+		props = props.split(' ');
+		
+		if ( event.keyCode == 40 || event.keyCode == 46 || event.keyCode == 8 || event.keyCode == 9 || event.keyCode == 27 || event.keyCode == 13 || (event.keyCode == 65 && event.ctrlKey === true) || (event.keyCode >= 35 && event.keyCode <= 39) || ((event.keyCode === 67 || event.keyCode === 86 || event.keyCode === 88) && event.ctrlKey)) {
+			return true;
+		}
+		
+		for ( var i = 0; i < props.length; i++ ) {
+			if ( codes[ props[ i ] ]( event ) ) {
+				return props[ i ];
+			}
+		}
+		
+		return false;
+	}
+	
+	return function( elem, keys, handler ) {
+		if ( this.jquery ) {
+			handler = keys;
+			keys = elem;
+			elem = false;
+		}
+		
+		var callback = function( event ) {
+			var prop = parse( keys, event );
+			
+			if ( prop ) {
+				return handler.call( this, event, prop );
+			} else {
+				return event.preventDefault();
+			}
+		};
+		
+		if ( elem ) {
+			for ( var i = 0; i < elem.length; i++ ) {
+				elem[ i ].keydown( callback );
+			}
+		} else {
+			return this.keydown( callback );
+		}
+		
+		return elem;
+	};
+})();
 
 // facilita criar strings que vão arrays/objetos no meio
 function createString( obj, callback, init, end ) {
@@ -390,46 +449,36 @@ var Menu = (function() {
 	return Menu;
 })();
 
-// jQuery( elem ).acceptOnly()
-(function() {
-	var codes = {
-		num: function( event ) { return event.keyCode > 47 && event.keyCode < 58; },
-		space: function( event ) { return event.keyCode === 32 },
-		enter: function( event ) { return event.keyCode === 13 },
-		tab: function( event ) { return event.keyCode === 9 },
-		'|': function( event ) { return event.keyCode === 226 && event.shiftKey },
-		':': function( event ) { return event.keyCode === 191 && event.shiftKey },
-		'/': function( event ) { return ( event.keyCode === 193 || event.keyCode === 81 ) && event.altKey && !event.shiftKey }
+var Delay = (function() {
+	function Delay() {
+		Delay.sets = Delay.sets || {};
+		Delay.add.apply( this, arguments );
 	};
-	
-	function parse( props, event ) {
-		var pass = false;
-		props = props.split( ' ' );
+
+	Delay.remove = function( name ) {
+		clearTimeout( Delay.sets[ name ] );
+		delete Delay.sets[ name ];
+	};
+
+	Delay.add = function( name, handler, time, self ) {
+		var id = 0;
 		
-		if ( event.keyCode == 40 || event.keyCode == 46 || event.keyCode == 8 || event.keyCode == 9 || event.keyCode == 27 || event.keyCode == 13 || (event.keyCode == 65 && event.ctrlKey === true) || (event.keyCode >= 35 && event.keyCode <= 39) || ((event.keyCode === 67 || event.keyCode === 86 || event.keyCode === 88) && event.ctrlKey)) {
-			return true;
+		if ( Delay.sets[ name ] ) {
+			Delay.remove( name );
 		}
 		
-		for ( var i = 0; i < props.length; i++ ) {
-			if ( codes[ props[ i ] ]( event ) ) {
-				return props[ i ];
-			}
+		function set() {
+			return setTimeout(function() {
+				if ( handler.call( self, id++ ) === true ) {
+					Delay.sets[ name ] = set();
+				}
+			}, time)
 		}
 		
-		return false;
-	}
-	
-	jQuery.fn.acceptOnly = function( props, callback ) {
-		return this.keydown(function( event ) {
-			var prop = parse( props, event );
-			
-			if ( prop ) {
-				return callback.call( this, event, prop );
-			} else {
-				return event.preventDefault();
-			}
-		});
+		Delay.sets[ name ] = set();
 	};
+	
+	return Delay;
 })();
 
 // estilos CSS gerais
