@@ -165,7 +165,7 @@ languages.en = {
 	},
 	attackplanner: {
 		planner: 'Planner',
-		attackplanner: 'Attack planner',
+		attackplanner: 'Attack Planner',
 		addcommand: 'Add comand',
 		attacker: 'Attacker village',
 		target: 'Village target',
