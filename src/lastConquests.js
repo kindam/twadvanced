@@ -6,6 +6,11 @@
 		pageUp,
 		keydownHandler = function( event, first ) {
 			if ( event.keyCode === 13 ) {
+				jQuery( '.lastConquests tbody:first' ).empty();
+				pageDown.show();
+				pageUp.hide();
+				page = 0;
+				
 				var time = ( new Date().getTime() / 1000 ) - ( ( this.value > 24 ? 24 : this.value ) * 3600 );
 				
 				return jQuery.get('/interface.php?func=get_conquer&since=' + time, function( data ) {
