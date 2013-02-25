@@ -1,8 +1,7 @@
 TWA.mapCoords = {
 	init: function() {
 		// opções e caixa de coordenadas
-		var html = jQuery( '<br/><table class="vis" width="100%" id="twa-getcoords"><tr><th>{getcoords} <a href="#" class="refresh">» {update}</a></th></tr><tr><td style="text-align:center"><textarea style="width:100%;background:none;border:none;resize:none;font-size:11px"></textarea></td></tr><tr><td class="options"><label><input type="checkbox" name="_mapplayers"> {mapplayers}</label> {min}: <input name="_mapplayersmin" style="width:35px"> {max}: <input name="_mapplayersmax" style="width:35px"><br/><label><input name="_mapabandoneds" type="checkbox"> {mapabandoneds}</label> {min}: <input name="_mapabandonedsmin" style="width:35px"> {max}: <input name="_mapabandonedsmax" style="width:35px"></td></tr></table>'.lang( 'mapcoords' ) ).insertAfter( '#map_whole' ),
-			timeout;
+		var html = jQuery( '<br/><table class="vis" width="100%" id="twa-getcoords"><tr><th>{getcoords} <a href="#" class="refresh">» {update}</a></th></tr><tr><td style="text-align:center"><textarea style="width:100%;background:none;border:none;resize:none;font-size:11px"></textarea></td></tr><tr><td class="options"><label><input type="checkbox" name="_mapplayers"> {mapplayers}</label> {min}: <input name="_mapplayersmin" style="width:35px"> {max}: <input name="_mapplayersmax" style="width:35px"><br/><label><input name="_mapabandoneds" type="checkbox"> {mapabandoneds}</label> {min}: <input name="_mapabandonedsmin" style="width:35px"> {max}: <input name="_mapabandonedsmax" style="width:35px"></td></tr></table>'.lang( 'mapcoords' ) ).insertAfter( '#map_whole' );
 		
 		// faz o loop das entradas de configurações
 		html.find( '.options input' ).each(function() {
@@ -11,8 +10,7 @@ TWA.mapCoords = {
 		}).change(function() {
 			var elem = this;
 			
-			clearTimeout( timeout );
-			timeout = setTimeout(function() {
+			Delay('savemapCoords', function() {
 				var value = elem[ elem.type === 'checkbox' ? 'checked' : 'value' ];
 				
 				TWA.settings[ elem.name ] = elem.type === 'checkbox' ? value : Number( value );
@@ -34,7 +32,7 @@ TWA.mapCoords = {
 		jQuery( '.twa-identify' ).remove();
 		
 		// faz o loop em todas aldeias do mapa
-		TWA.mapVillages(function( coord ) {
+		mapVillages(function( coord ) {
 			// caso a aldeia seja barbara
 			if ( this.owner === '0' ) {
 				// verifica se a aldeia esta com os pontos de acordo com o filtro
