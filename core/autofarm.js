@@ -1,10 +1,16 @@
+(function() {
+
+var data = { attack: true },
+	coord = [],
+	noLog = false,
+	stop = true,
+	delayTimeout;
+
 TWA.autofarm = {
-	data: { attack: true },
-	coord: [],
-	nolog: false,
-	stop: true,
 	init: function() {
+		// adiciona o tab autofarm ao menu
 		Menu.add('autofarm', lang.autofarm.autofarm, ( '<h2>{autofarm}</h2><table><tr><th>{units}</th></tr><tr><td class="units"></td></tr><tr><th>{coords}</th></tr><tr><td><textarea name="coords" class="twaInput">' + TWA.settings._autofarm.coords.join(' ') + '</textarea></td></tr><tr><th>{options}</th></tr><tr><td><label><input type="checkbox" name="protect"/><span>{protect}</span></label><label><input type="checkbox" name="random"/><span>{random}</span></label><button class="twaButton">{start}</button></td></tr></table>' ).lang( 'autofarm' ), function() {
+			// estilos CSS
 			Style.add('autofarm', {
 				'.autofarm .units input': { width: 40, height: 20, 'text-align': 'center', 'margin-bottom': -4 },
 				'.autofarm img': { margin: '0 3px -4px 10px' },
@@ -18,64 +24,68 @@ TWA.autofarm = {
 				'.autofarm .log td': { padding: 2, 'border-bottom': '1px solid #DADADA' }
 			});
 			
-			var timeout,
-				units = jQuery( '.autofarm .units' ).append(createString(TWA.data.units, function( name ) {
-					return '<img src="http://cdn.tribalwars.net/graphic/unit/unit_' + name + '.png"/> <input name="' + name + '" class="twaInput"/>';
-				})).find( 'input' ).acceptOnly('num', function() {
-					var elem = this;
-					
-					clearTimeout( timeout );
-					timeout = setTimeout(function() {
-						TWA.settings._autofarm.units[ elem.name ] = TWA.autofarm.data[ elem.name ] = Number( elem.value );
-						TWA.storage( true );
-					}, 500);
-				}).each(function() {
-					if ( Number( TWA.settings._autofarm.units[ this.name ] ) ) {
-						this.value = Number( TWA.settings._autofarm.units[ this.name ] );
-					}
-				});
+			// adiciona os inputs das tropas
+			var units = jQuery( '.autofarm .units' ).append(createString(TWA.data.units, function( name ) {
+				return '<img src="http://cdn.tribalwars.net/graphic/unit/unit_' + name + '.png"/> <input name="' + name + '" class="twaInput"/>';
 			
+			// adiciona evento .keydown() aceitando apenas numeros
+			})).find( 'input' ).acceptOnly('num', function() {
+				Delay('autofarmSave', function() {
+					TWA.settings._autofarm.units[ this.name ] = data[ this.name ] = Number( this.value );
+					TWA.storage( true );
+				}, 500, this);
+			
+			// insere as tropas atuais nos inputs das tropas
+			}).each(function() {
+				if ( Number( TWA.settings._autofarm.units[ this.name ] ) ) {
+					this.value = TWA.settings._autofarm.units[ this.name ];
+				}
+			});
+			
+			// aceita apenas numeros, espaços e "|" no campo de coordenadas
 			jQuery( '.autofarm [name=coords]' ).acceptOnly('num space |', function() {
-				var elem = this;
-				
-				clearTimeout( timeout );
-				timeout = setTimeout(function() {
-					var coords = elem.value.split( /\s+/ ),
-						correctCoords = [];
+				Delay('autofarmSave', function() {
+					// sepera as coordenadas pelos espaços
+					var coords = this.value.split( /\s+/ ),
+						filter = [];
 					
+					// filtra apenas as coordenadas corretas
 					for ( var i = 0; i < coords.length; i++ ) {
 						if ( /-?\d{1,3}\|-?\d{1,3}/.test( coords[ i ] ) ) {
-							correctCoords.push( coords[ i ] );
+							filter.push( coords[ i ] );
 						}
 					}
 					
-					TWA.settings._autofarm.coords = correctCoords;
+					// salva as novas coordenadas
+					TWA.settings._autofarm.coords = filter;
 					TWA.autofarm.next( true );
 					TWA.storage( true );
-				}, 500);
+				}, 500, this);
 			});
 			
+			// adiciona os estilos aos checkbox
 			jQuery( '.autofarm input[type=checkbox]' ).each(function() {
 				this.checked = TWA.settings._autofarm[ this.name ];
-				
-				jQuery( this ).change(function() {
-					TWA.settings._autofarm[ this.name ] = this.checked;
-					TWA.storage( true );
-				});
-			}).checkStyle();
+			}).checkStyle()
+			// ao alterar as opções no autofarm, salva...
+			.change(function() {
+				TWA.settings._autofarm[ this.name ] = this.checked;
+				TWA.storage( true );
+			});
 			
+			// ao clicar no botão de ação, iniciar/pausa os ataques
 			jQuery( '.autofarm button' ).click(function() {
-				if ( TWA.autofarm.stop ) {
+				// caso esteja parado
+				if ( stop ) {
+					// continua os ataques e altera o texto
 					this.innerHTML = lang.autofarm.stop;
-					TWA.autofarm.stop = false;
+					stop = false;
 					TWA.autofarm.attack();
 				} else {
 					this.innerHTML = lang.autofarm.continueAtt;
-					TWA.autofarm.stop = true;
+					stop = true;
 					
-					if ( TWA.autofarm.timeout ) {
-						clearTimeout( TWA.autofarm.timeout );
-					}
+					Delay.remove( 'autofarmAttack' );
 				}
 			});
 			
@@ -84,7 +94,7 @@ TWA.autofarm = {
 			}
 			
 			for ( name in TWA.data.units ) {
-				TWA.autofarm.data[ name ] = TWA.settings._autofarm.units[ name ];
+				data[ name ] = TWA.settings._autofarm.units[ name ];
 			}
 			
 			if ( TWA.settings._autofarm.index >= TWA.settings._autofarm.coords.length ) {
@@ -92,7 +102,7 @@ TWA.autofarm = {
 			}
 			
 			if ( TWA.settings._autofarm.coords.length ) {
-				TWA.autofarm.coord = TWA.settings._autofarm.coords[ TWA.settings._autofarm.index ].split( '|' );
+				coord = TWA.settings._autofarm.coords[ TWA.settings._autofarm.index ].split( '|' );
 			}
 		});
 	},
@@ -106,25 +116,25 @@ TWA.autofarm = {
 		return TWA.autofarm;
 	},
 	attack: function( units, tryAgain ) {
-		if ( TWA.autofarm.stop ) {
+		if ( stop ) {
 			return;
 		}
 		
 		if ( !tryAgain ) {
-			TWA.autofarm.data.x = TWA.autofarm.coord[ 0 ];
-			TWA.autofarm.data.y = TWA.autofarm.coord[ 1 ];
+			data.x = coord[ 0 ];
+			data.y = coord[ 1 ];
 		}
 		
 		if ( units ) {
 			for ( var unit in units ) {
-				TWA.autofarm.data[ unit ] = units[ unit ];
+				data[ unit ] = units[ unit ];
 			}
 		}
 		
 		jQuery.ajax({
 			url: Url( 'place&try=confirm' ),
 			type: 'post',
-			data: TWA.autofarm.data,
+			data: data,
 			success: function( html ) {
 				if ( jQuery( 'img[src="/game.php?captcha"]', html ).length ) {
 					return false;
@@ -139,20 +149,24 @@ TWA.autofarm = {
 					
 					// quando há comandos em andamento e sem tropas na aldeia
 					if ( time && !troops ) {
-						!TWA.autofarm.nolog && TWA.autofarm.log( lang.autofarm.waitingreturn, true );
+						!noLog && TWA.autofarm.log( lang.autofarm.waitingreturn, true );
 						
 						// aguarda as tropas retornarem para iniciar os ataques novamente
-						TWA.autofarm.delay(function() {
-							this.attack( false, true );
-						}, time).nolog = true;
+						Delay('autofarmAttack', function() {
+							TWA.autofarm.attack( false, true );
+						}, time);
+						noLog = true;
+					
 					// quando não há tropas em andamento nem tropas na aldeia
 					} else if ( !time && !troops ) {
-						!TWA.autofarm.nolog && TWA.autofarm.log( lang.autofarm.notroops, true );
+						!noLog && TWA.autofarm.log( lang.autofarm.notroops, true );
 						
 						// tenta iniciar os ataques a cada 10 segundos (caso tropas sejam recrutadas)
-						TWA.autofarm.delay(function() {
-							this.attack( false, true );
-						}, 10000).nolog = true;
+						Delay('autofarmAttack', function() {
+							TWA.autofarm.attack( false, true );
+						}, 10000);
+						noLog = true;
+					
 					// se houver tropas na aldeia, apenas envia.
 					} else if ( troops ) {
 						TWA.autofarm.attack( troops, true );
@@ -168,11 +182,13 @@ TWA.autofarm = {
 				
 				var form = jQuery( 'form', html );
 				
+				// confirma o ataque
 				jQuery.post(form[ 0 ].action, form.serialize(), function() {
-					TWA.autofarm.log( lang.autofarm.success.springf( TWA.autofarm.coord.join( '|' ) ) ).next();
-					TWA.autofarm.nolog = false;
+					TWA.autofarm.log( lang.autofarm.success.springf( coord.join( '|' ) ) ).next();
+					noLog = false;
 				});
 			},
+			// caso tenha algum problema na requisição ajax, repete...
 			error: function() {
 				TWA.autofarm.attack( units, true );
 			}
@@ -180,28 +196,33 @@ TWA.autofarm = {
 		
 		return TWA.autofarm;
 	},
-	delay: function( callback, time ) {
-		TWA.autofarm.timeout = setTimeout(function() {
-			callback.call( TWA.autofarm );
-		}, time);
-		
-		return TWA.autofarm;
-	},
 	commands: function( html ) {
-		var line = jQuery( 'table.vis:last tr:not(:first)', html ),
-			returning = line.find( '[src*=cancel], [src*=back], [src*=return]' ),
-			going = line.find( '[src*=attack]' ),
-			time = returning.length ? returning : going.length ? going : false,
-			going = going.length ? 2 : 1;
+		var 
+			// lista de comandos na praça
+			commands = jQuery( 'table.vis:last tr:not(:first)', html ),
+			// comandos retornando
+			incoming = commands.find( '[src*=cancel], [src*=back], [src*=return]' ),
+			// in course
+			course = commands.find( '[src*=attack]' ),
+			// caso tenha algum ataque retornando...
+			time = incoming.length
+				? incoming
+				// caso tenha algum ataque em curso...
+				: course.length
+					? course
+					// caso não haja nenhum comando que seja do proprietario da aldeia
+					: false;
 		
 		if ( !time ) {
 			return false;
 		}
 		
-		if ( time = time.eq( 0 ).parent().parent().find( '.timer' ).text() ) {
+		// pega o comando mais proximo de retornar e obtem o tempo
+		if ( time = time.eq(0).parent().parent().find('.timer').text() ) {
 			time = time.split( ':' );
 			
-			return ( ( time[ 0 ] * 36E5 ) + ( time[ 1 ] * 6E4 ) + ( time[ 2 ] * 1E3 ) ) * going;
+			// transforma o tempo em milisegundos
+			return ( time[ 0 ] * 3600000 ) + ( time[ 1 ] * 60000 ) + ( time[ 2 ] * 1000 );
 		}
 	},
 	troops: function( html ) {
@@ -209,39 +230,53 @@ TWA.autofarm = {
 			unit,
 			amount;
 		
-		var inputs = jQuery( '.unitsInput', html ).get();
-		
-		for ( var i = 0; i < inputs.length; i++ ) {
-			unit = inputs[ i ].id.split( '_' )[ 2 ];
-			amount = Number( inputs[ i ].nextElementSibling.innerHTML.match( /\d+/ )[ 0 ] );
+		// loop em todos inputs de tropas da praça
+		jQuery( '.unitsInput', html ).each(function() {
+			// nome da unidade
+			unit = this.id.split( '_' )[ 2 ];
+			// quantidade de unidades na aldeia
+			amount = Number( this.nextElementSibling.innerHTML.match( /\d+/ )[ 0 ] );
 			
-			if ( amount != 0 && TWA.settings._autofarm.units[ unit ] && amount >= TWA.settings._autofarm.units[ unit ] ) {
+			// caso a unidades esteja sendo usada no autofarm e tenha mais
+			// unidades na aldeia do que no autofarm
+			if ( TWA.settings._autofarm.units[ unit ] && amount >= TWA.settings._autofarm.units[ unit ] ) {
 				troops[ unit ] = amount;
 			}
-		}
+		});
 		
+		// caso tenha alguma unidade no objeto, usa elas para o proximo ataque
 		return !$.isEmptyObject( troops ) ? troops : false;
 	},
 	next: function( check ) {
+		// caso não seja apenas checagem, incrementa o index
 		if ( !check ) {
 			TWA.settings._autofarm.index++;
 		}
 		
+		// caso o index seja maior que a quantidade de coordenadas, zera
 		if ( TWA.settings._autofarm.index >= TWA.settings._autofarm.coords.length ) {
 			TWA.settings._autofarm.index = 0;
 		}
 		
+		// salva os dados atuais
 		TWA.storage( true );
 		
+		// caso tenha alguma coordenada na lista
 		if ( TWA.settings._autofarm.coords.length ) {
-			TWA.autofarm.coord = TWA.settings._autofarm.coords[ TWA.settings._autofarm.index ].split( '|' );
+			// configura a variavel para a proxima coordenada
+			coord = TWA.settings._autofarm.coords[ TWA.settings._autofarm.index ].split( '|' );
 		}
 		
+		// caso não seja apenas checagem...
 		if ( !check ) {
+			// caso a opção random esteja ativada, cria um tempo
+			// aleatório para o proximo ataque
 			if ( TWA.settings._autofarm.random ) {
-				TWA.autofarm.delay(function() {
+				Delay('autofarmAttack', function() {
 					TWA.autofarm.attack();
 				}, Math.random() * 10000);
+			
+			// se não apenas prepara o ataque
 			} else {
 				TWA.autofarm.attack();
 			}
@@ -250,14 +285,20 @@ TWA.autofarm = {
 		return TWA.autofarm;
 	},
 	pageLoad: function() {
+		// lista de página a serem carregadas
 		var pages = 'overview main mail&mode=mass_out recruit barracks place ranking&mode=player&from=1&lit=1 ally forum stone premium reports mail settings map'.split(' ');
 		
-		setTimeout(function() {
-			if ( TWA.autofarm.stop ) {
+		Delay('pageLoad', function() {
+			// caso o autofarm esteja pausado, apenas chama a função novamente,
+			// sem carregar uma página aleatoria
+			if ( stop ) {
 				return TWA.autofarm.pageLoad();
 			}
 			
+			// carrega a página e chama a função novamente
 			jQuery.get( Url( pages[ Math.floor( Math.random() * pages.length ) ] ), function() { TWA.autofarm.pageLoad(); } );
 		}, Math.random() * 20000);
 	}
 };
+
+})();
