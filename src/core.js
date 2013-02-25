@@ -676,18 +676,19 @@ TWA.ready(function() {
 
 // carregando API de comentarios do facebook.
 (function(d,s,id) {
-	Menu.add('comments', lang.comments, '<div class="fb-comments" data-href="http://relaxeaza.qlix.com.br" data-num-posts="10"></div>', function() {});
-	jQuery( 'body' ).prepend( '<div id="fb-root"></div>' );
-	
-	var js, fjs = d.getElementsByTagName( s )[ 0 ];
-	
-	if ( d.getElementById( id ) ) {
-		return;
-	}
-	
-	js = d.createElement(s); js.id = id;
-	js.src = "//connect.facebook.net/pt_BR/all.js#xfbml=1";
-	fjs.parentNode.insertBefore( js, fjs );
+	Menu.add('comments', lang.comments, '<div class="fb-comments" data-href="http://relaxeaza.qlix.com.br" data-num-posts="10"></div>', function() {
+		jQuery( 'body' ).prepend( '<div id="fb-root"></div>' );
+		
+		var js, fjs = d.getElementsByTagName( s )[ 0 ];
+		
+		if ( d.getElementById( id ) ) {
+			return;
+		}
+		
+		js = d.createElement(s); js.id = id;
+		js.src = "//connect.facebook.net/pt_BR/all.js#xfbml=1";
+		fjs.parentNode.insertBefore( js, fjs );
+	});
 }(document, 'script', 'facebook-jssdk'));
 
 })();
