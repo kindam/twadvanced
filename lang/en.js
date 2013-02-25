@@ -53,7 +53,7 @@ languages.en = {
 		building: 'Mass builder/demolition.',
 		research: 'Massive search Units',
 		changegroups: 'Change groups on overview.',
-		attackplanner: 'Attack planner',
+		attackplanner: 'Attack Planner',
 		selectvillages: 'Village picker.',
 		overview: 'Advanced overview.',
 		savealert: 'Settings have been saved!',
@@ -201,7 +201,7 @@ languages.en = {
 		points: 'points'
 	},
 	lastConquests: {
-		lastConquests: 'Last ennoblements',
+		lastConquests: 'Last Ennoblements',
 		loadLast: 'Load ennoblement in the last',
 		hours: 'hours',
 		village: 'Village',

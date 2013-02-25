@@ -53,7 +53,7 @@ languages.pt = {
 		building: 'Construção/demolição em massa.',
 		research: 'Pesquisa em massa.',
 		changegroups: 'Alterar grupos na visualização.',
-		attackplanner: 'Planeador de ataques.',
+		attackplanner: 'Planeador de Ataques.',
 		selectvillages: 'Selecionador de aldeias.',
 		overview: 'Visualização avançada.',
 		savealert: 'As configurações foram salvas!',

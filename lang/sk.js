@@ -165,7 +165,7 @@ languages.sk = {
 	},
 	attackplanner: {
 		planner: 'Plánovaè',
-		attackplanner: 'Plánovaè útokov',
+		attackplanner: 'Plánovaè Útokov',
 		addcommand: 'Prida príkaz',
 		attacker: 'Útoèiaca dedina',
 		target: 'Cie¾',
@@ -201,7 +201,7 @@ languages.sk = {
 		points: 'body'
 	},
 	lastConquests: {
-		lastConquests: 'Najnovšie úspechy',
+		lastConquests: 'Najnovšie Úspechy',
 		loadLast: 'Vložte úspechy v posledných',
 		hours: 'hodiny',
 		village: 'Obec',
