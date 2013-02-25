@@ -218,5 +218,6 @@ languages.sk = {
 		onlySelected: 'Len vybrané obce',
 		argumentError: 'Neplatný argument',
 		correct: 'Opraviť'
-	}
+	},
+	comments: 'Komentáre'
 }

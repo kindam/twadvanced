@@ -388,33 +388,28 @@ var Style = (function() {
 	return new Style();
 })();
 
+// centraliza um elemento no centro da tela
+function center( elem ) {
+	var $win = jQuery( window );
+	return elem.css( 'left', Math.max( 0, ( ( $win.width() - elem.outerWidth() ) / 2 ) + $win.scrollLeft() ) );
+}
+
 // menu com ferramentas/configurações
 var Menu = (function() {
-	function center( elem ) {
-		var $win = jQuery( window );
-		return elem.css( 'left', Math.max( 0, ( ( $win.width() - elem.outerWidth() ) / 2 ) + $win.scrollLeft() ) );
-	}
-	
-	var Menu = function( elemOpen, onclick, pos ) {
+	var Menu = function( elemOpen, onclick ) {
 		var self = this;
 		this.opened = false;
 		this._menus = {};
-		this._active = 'autofarm';
+		this._active = 'comments';
 		this.menu = jQuery( '<div class="twa-menu"><div class="head"><ul></ul></div><div class="body"></div></div>' ).appendTo( 'body' );
 		
 		elemOpen.click(function() {
-			if ( onclick.call( self ) === false ) {
+			if ( onclick && onclick.call( self ) === false ) {
 				return false;
 			}
 			
 			self[ self.menu.is( ':visible' ) ? 'hide' : 'show' ]();
 		});
-		
-		if ( !pos ) {
-			this.menu = center( this.menu );
-		} else {
-			this.menu.css({ top: pos[ 0 ], left: pos[ 1 ] });
-		}
 		
 		return this;
 	};
@@ -470,6 +465,15 @@ var Menu = (function() {
 	return Menu;
 })();
 
+Menu = new Menu(menuButton, function() {
+	if ( !this.opened ) {
+		this.opened = true;
+		this.open && this.open();
+		this.menu = center( this.menu );
+	}
+	return true;
+});
+
 var Delay = (function() {
 	function Delay() {
 		Delay.sets = Delay.sets || {};
@@ -504,14 +508,15 @@ var Delay = (function() {
 
 // estilos CSS gerais
 Style.add('twa', {
-	'#twa-menuOpen': { margin: '0px 6px 0px 2px', 'border-radius': 4, padding: '0px 3px 2px 3px', 'font-family': 'courier new', border: '1px solid rgba(0,0,0,0.25)', background: '-special-linear-gradient(bottom, #e7e7e7 100%, #c5c5c5 0%)', cursor: 'pointer' },
+	'#twa-menuOpen, #twa-commentsOpen': { margin: '0px 6px 0px 2px', 'border-radius': 4, padding: '0px 3px 2px 3px', 'font-family': 'courier new', border: '1px solid rgba(0,0,0,0.25)', background: '-special-linear-gradient(bottom, #e7e7e7 100%, #c5c5c5 0%)', cursor: 'pointer' },
+	'.fb-comments, .fb-comments > span, .fb-comments iframe[style]': { width: '100% !important' },
 	'#twa-tooltip': { position: 'absolute', display: 'none', 'z-index': '999999', background: 'rgba(0,0,0,.8)', width: 300, color: '#ccc', padding: 4, 'border-radius': 2, 'box-shadow': '1px 1px 3px #333' },
 	'.twaInput': { background: '#F3F3F3', 'border-radius': 6, 'box-shadow': '0 1px 4px rgba(0,0,0,0.2) inset', 'font-family': 'courier new', border: '1px solid #bbb', color: '#555' },
 	'.twaInput:disabled': { background: '#ddd', color: '#aaa' },
 	'.twaButton': { 'border-radius': 3, margin: 10, padding: '7px 20px', background: '-special-linear-gradient(bottom, #CCC 0%, white 100%)', border: '1px solid #AAA', 'font-weight': 'bold' },
 	'.checkStyle': { display: 'block', 'float': 'left', background: 'url(http://i.imgur.com/MhppaVe.png) top left no-repeat', 'background-position': '-4px -5px', width: 21, height: 20 },
 	'.checkStyle.checked': { 'background-position': '-4px -65px' },
-	'.checkStyle.center': { margin: '0 auto', float: 'none!important' },
+	'.checkStyle.center': { margin: '0 auto', 'float': 'none!important' },
 	// table
 	'.twa-table': { width: '100%' },
 	'.twa-table th': { 'text-align': 'center', background: '-special-linear-gradient(bottom, #BBB 30%, #CCC 100%) !important', padding: '7px !important' },
@@ -526,13 +531,6 @@ Style.add('twa', {
 	'.twa-menu .head li a': { color: '#666', 'text-decoration': 'none', padding: 8, 'font-size': 13, 'border-radius': 10 },
 	'.twa-menu .head li a.active': { 'box-shadow': '0 0 5px #AAA inset' },
 	'.twa-menu .body': { padding: 10 }
-});
-
-Menu = new Menu(menuButton, function() {
-	if ( !this.opened ) {
-		this.open();
-		this.opened = true;
-	}
 });
 
 // nome do items salvos em localStorage
@@ -563,7 +561,7 @@ if((function() {
 		TWA.oldData = TWA.data;
 		
 		Style.add('update', { '#newVersion span': { display: 'block', 'margin-bottom': 6, 'font-size': 11 } });
-		UI.SuccessMessage( '<div id="newVersion"><b>Relaxeaza Tribal Wars Advanced - Version ' + TWA.version + '. </b><p>Alterações/Changes<br/> <span><b>Adicionado:</b> Ferramenta para mostrar as últimas conquistas do mundo.</span><span><b>Adicionado:</b> Agora é possivel trocar o tempo do planeador de ataques apenas apertando para cima/baixo.</span><span><b>Resolvido:</b> Problema ao renomear vários ataques de uma vez.</span><span><b>Resolvido:</b> Problema que fazia ataques do autofarm parar sozinho (ainda pode acontecer).</span><span><b>Adicionado:</b> Algumas traduções para o inglês/eslovaco estavam faltando.</span><span><b>Resolvido:</b> Ferramenta para calcular recursos e farmar aldeias pelo relatório foi reparado.</span><span><b>Adicionado:</b> Opção para enviar arietes diretamente do relatório de espionagem.</span><span><b>Resolvido:</b> Opção para selecinar apenas aldeias de ataque/defasa na visualização foi reparado.</span><span>Mais informações <a href="https://github.com/relaxeaza/twadvanced/wiki/Tribal-Wars-Advanced">aqui</a></span></p></div>', 60000 );
+		UI.SuccessMessage( '<div id="newVersion"><b>Relaxeaza Tribal Wars Advanced - Version ' + TWA.version + '. </b><p>Alterações/Changes<br/> <span><b>Adicionado:</b> Sistema de comentários do facebook.</span><span><b>Reparado:</b> Alguns problemas do "Ultimas Conquistas" e "Planeador de Ataques".</span><span>Mais informações <a href="https://github.com/relaxeaza/twadvanced/wiki/Tribal-Wars-Advanced">aqui</a></span></p></div>', 60000 );
 		
 		return true;
 	}
@@ -675,5 +673,21 @@ TWA.ready(function() {
 	TWA.config();
 	TWA.lastConquests.init();
 });
+
+// carregando API de comentarios do facebook.
+(function(d,s,id) {
+	Menu.add('comments', lang.comments, '<div class="fb-comments" data-href="http://relaxeaza.qlix.com.br" data-num-posts="10"></div>', function() {});
+	jQuery( 'body' ).prepend( '<div id="fb-root"></div>' );
+	
+	var js, fjs = d.getElementsByTagName( s )[ 0 ];
+	
+	if ( d.getElementById( id ) ) {
+		return;
+	}
+	
+	js = d.createElement(s); js.id = id;
+	js.src = "//connect.facebook.net/pt_BR/all.js#xfbml=1";
+	fjs.parentNode.insertBefore( js, fjs );
+}(document, 'script', 'facebook-jssdk'));
 
 })();

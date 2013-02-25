@@ -218,5 +218,6 @@ languages.en = {
 		onlySelected: 'Only selected villages',
 		argumentError: 'Invalid argument',
 		correct: 'Correct'
-	}
+	},
+	comments: 'Comments'
 }

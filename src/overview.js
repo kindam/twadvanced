@@ -39,7 +39,7 @@ TWA.overview = {
 				amount,
 				points,
 				farm,
-				span
+				span,
 				vid;
 			
 			for ( var i = 0; i < elems.length; i++ ) {

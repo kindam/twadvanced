@@ -218,5 +218,6 @@ languages.pt = {
 		onlySelected: 'Apenas aldeias selecionadas',
 		argumentError: 'Argumento inválido',
 		correct: 'Correto'
-	}
+	},
+	comments: 'Comentários'
 }
