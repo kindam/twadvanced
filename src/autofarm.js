@@ -3,8 +3,7 @@
 var data = { attack: true },
 	coord = [],
 	noLog = false,
-	stop = true,
-	delayTimeout;
+	stop = true;
 
 TWA.autofarm = {
 	init: function() {
