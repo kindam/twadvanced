@@ -142,7 +142,7 @@ jQuery.fn.acceptOnly = jQuery.acceptOnly = (function() {
 		space: function(e) { return e.keyCode === 32 },
 		enter: function(e) { return e.keyCode === 13 },
 		tab: function(e) { return e.keyCode === 9 },
-		'|': function(e) { return e.keyCode === 226 && e.shiftKey },
+		'|': function(e) { return e.keyCode === (jQuery.browser.mozilla ? 220 : 226) && e.shiftKey },
 		':': function(e) { return e.keyCode === 191 && e.shiftKey },
 		'/': function(e) { return ( e.keyCode === 193 || e.keyCode === 81 ) && e.altKey && !e.shiftKey }
 	};
