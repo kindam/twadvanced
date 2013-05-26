@@ -64,11 +64,11 @@ TWA.autofarm = {
 			
 			// adiciona os estilos aos checkbox
 			jQuery( '.autofarm input[type=checkbox]' ).each(function() {
-				this.checked = TWA.settings._autofarm[ this.name ];
+				this.checked = TWA.settings._autofarm[this.name];
 			}).checkStyle()
 			// ao alterar as opções no autofarm, salva...
 			.change(function() {
-				TWA.settings._autofarm[ this.name ] = this.checked;
+				TWA.settings._autofarm[ this.name ] = $(this).is(":checked"); // Não estava salvando
 				TWA.storage( true );
 			});
 			
