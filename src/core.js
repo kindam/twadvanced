@@ -400,7 +400,7 @@ var Menu = (function() {
 		var self = this;
 		this.opened = false;
 		this._menus = {};
-		this._active = 'comments';
+		this._active = 'config';
 		this.menu = jQuery( '<div class="twa-menu"><div class="head"><ul></ul></div><div class="body"></div></div>' ).appendTo( 'body' );
 		
 		elemOpen.click(function() {
@@ -509,7 +509,6 @@ var Delay = (function() {
 // estilos CSS gerais
 Style.add('twa', {
 	'#twa-menuOpen, #twa-commentsOpen': { margin: '0px 6px 0px 2px', 'border-radius': 4, padding: '0px 3px 2px 3px', 'font-family': 'courier new', border: '1px solid rgba(0,0,0,0.25)', background: '-special-linear-gradient(bottom, #e7e7e7 100%, #c5c5c5 0%)', cursor: 'pointer' },
-	'.fb-comments, .fb-comments > span, .fb-comments iframe[style]': { width: '100% !important' },
 	'#twa-tooltip': { position: 'absolute', display: 'none', 'z-index': '999999', background: 'rgba(0,0,0,.8)', width: 300, color: '#ccc', padding: 4, 'border-radius': 2, 'box-shadow': '1px 1px 3px #333' },
 	'.twaInput': { background: '#F3F3F3', 'border-radius': 6, 'box-shadow': '0 1px 4px rgba(0,0,0,0.2) inset', 'font-family': 'courier new', border: '1px solid #bbb', color: '#555' },
 	'.twaInput:disabled': { background: '#ddd', color: '#aaa' },
@@ -670,8 +669,8 @@ TWA.ready(function() {
 	
 	TWA.settings.attackplanner && TWA.attackplanner.init();
 	TWA.settings.autofarm && TWA.autofarm.init();
-	TWA.config();
 	TWA.lastConquests.init();
+	TWA.config();
 });
 
 })();
