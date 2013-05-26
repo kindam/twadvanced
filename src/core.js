@@ -194,7 +194,7 @@ jQuery.fn.acceptOnly = jQuery.acceptOnly = (function() {
 })();
 
 // facilita criar strings que vão arrays/objetos no meio
-function createString( obj, callback, init, end ) {
+var createString = function( obj, callback, init, end ) {
 	if ( typeof callback === 'string' ) {
 		end = init;
 		init = callback;
@@ -217,7 +217,7 @@ function createString( obj, callback, init, end ) {
 }
 
 // pega os milesegundos de um tempo formatado
-function formatToTime( _date, _time ) {
+var formatToTime = function( _date, _time ) {
 	var data, date;
 	
 	if ( _time ) {
@@ -231,7 +231,7 @@ function formatToTime( _date, _time ) {
 }
 
 // formata o tempo (milisegundos)
-function timeFormat( value ) {
+var timeFormat = function( value ) {
 	var date = new Date( value ),
 	hour = date.getHours(),
 	min = date.getMinutes(),
@@ -251,7 +251,7 @@ function timeFormat( value ) {
 }
 
 // verifica se um tempo é maior que o tempo atual do jogo
-function validTime( dateTime ) {
+var validTime = function( dateTime ) {
 	var valid = false;
 	
 	if ( /^\d+\:\d+\:\d+\s\d+\/\d+\/\d{4}$/.test( dateTime ) ) {
@@ -266,12 +266,12 @@ function validTime( dateTime ) {
 }
 
 // pega o url correto do jogo
-function Url( screen, vid ) {
+var Url = function( screen, vid ) {
 	return game_data.link_base_pure.replace( /village=\d+/, 'village=' + ( vid || game_data.village.id ) ) + screen;
 }
 
 // adiciona as caixas para selecionar as aldeias na vizualização
-function addCheckbox() {
+var addCheckbox = function() {
 	var stop = [ 'trader', 'groups', 'commands', 'incomings' ],
 		table, tr;
 	
@@ -304,7 +304,7 @@ function addCheckbox() {
 }
 
 // loop em todas aldeias do mapa.
-function mapVillages( callback ) {
+var mapVillages = function( callback ) {
 	var village;
 	
 	for ( var x = 0; x < TWMap.size[ 1 ]; x++ ) {
@@ -389,7 +389,7 @@ var Style = (function() {
 })();
 
 // centraliza um elemento no centro da tela
-function center( elem ) {
+var center = function( elem ) {
 	var $win = jQuery( window );
 	return elem.css( 'left', Math.max( 0, ( ( $win.width() - elem.outerWidth() ) / 2 ) + $win.scrollLeft() ) );
 }
@@ -673,22 +673,5 @@ TWA.ready(function() {
 	TWA.config();
 	TWA.lastConquests.init();
 });
-
-// carregando API de comentarios do facebook.
-(function(d,s,id) {
-	Menu.add('comments', lang.comments, '<div class="fb-comments" data-href="http://relaxeaza.qlix.com.br" data-num-posts="10"></div>', function() {
-		jQuery( 'body' ).prepend( '<div id="fb-root"></div>' );
-		
-		var js, fjs = d.getElementsByTagName( s )[ 0 ];
-		
-		if ( d.getElementById( id ) ) {
-			return;
-		}
-		
-		js = d.createElement(s); js.id = id;
-		js.src = "//connect.facebook.net/pt_BR/all.js#xfbml=1";
-		fjs.parentNode.insertBefore( js, fjs );
-	});
-}(document, 'script', 'facebook-jssdk'));
 
 })();
